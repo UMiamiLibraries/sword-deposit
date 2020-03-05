@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+		<h2>The University of Miami Institutional Repository Deposit Agreement – Open Access Dissertations</h2>
+		<h3>Deposit Agreement<br />
+			Non-Exclusive Distribution and Preservation License
+		</h3>
+		<p>In order to properly administer the University of Miami Libraries Institutional Repository and to preserve the contents for future use, the University of Miami (the "University") requires certain permissions and warrants from you, the author(s) and/or copyright owner of content and materials submitted to the Institutional Repository (the "Work"). If you are the copyright owner of the Work, by accepting the terms of this Non-Exclusive Distribution and Preservation License ("License"), you still retain copyright to your Work and do not give up the right to submit the Work to publishers or other repositories. If you are not the copyright owner, you represent that the copyright owner has given you permission to deposit the Work.</p>
+		<p>By accepting (clicking through) this License, you grant to the University the non-exclusive right to reproduce, translate (as described below), and distribute the Work, including the descriptive information (metadata) and abstract, in any format or medium worldwide and royalty-free, including, but not limited to, publication over the Internet, except as provided for by an addendum to this License.</p>
+		<p>When provided, the University will clearly identify your name(s) as the author(s) or copyright owner(s) of the Work as well as the name(s) of the copyright owner(s) if different from your name(s), include a statement of your copyright, and will not make any alteration, other than as allowed by this License, to your Work.</p>
+		<p>You agree that the University may translate the Work to any medium or format for the purposes of security, back-up, and preservation. You agree that the University may make multiple copies of the Work for the purposes of security, back-up, and preservation.</p>
+		<p>If you cannot make all of the following representations, then you shall contact the manager (<a href="mailto:grad.dissertation@miami.edu">grad.dissertation@miami.edu</a>) of the service before proceeding further. In order to submit Work, you represent and warrant that:</p>
+		<ol>
+			<li>You have the right to grant the rights contained in the License.</li>
+			<li>This Work does not, to the best of your knowledge, infringe on anyone's copyright, trademark, right of publicity, or other intellectual property rights.</li>
+			<li>If the Work does contain material for which you do not hold copyright and that exceeds fair use, you have obtained the written unrestricted permission of the copyright owner to grant the University the rights required by this license and that such third-party owned material is clearly identified and acknowledged within the text or content of the Work.</li>
+			<li>The Work does not contain any confidential information, proprietary information of others or export controlled information.</li>
+			<li>There are not any restrictions or required publication delays on the distribution of the Work by the University.</li>
+			<li>The information you provide about the Work is accurate.</li>
+			<li>You understand that if copyright terms for, or ownership of, the Work change, it is your responsibility to notify the University of these changes.</li>
+		</ol>
+		<p><strong>You agree to indemnify, defend and hold harmless the University, its trustees, faculty, employees, students, and agents from any liability arising from any breach of the above representations and warranties and any claim of infringement arising from the University’s exercise of the non-exclusive rights granted hereunder.</strong></p>
+		<p><strong>You understand that you may request that the Work be withdrawn from the Institutional Repository, and, in such an event, the descriptive information (metadata) will be retained and a copy of the Work will be retained in a 'dark archive' where it is no longer publicly accessible. The exception to this is requests to withdraw theses and dissertations electronically deposited with the Graduate School; in those cases, you understand that you must contact the Graduate School to make such a request.</strong></p>
+		<p>If the Work is based upon work that has been sponsored or supported by an agency or organization other than the University, you must fulfill any right of review or other obligations required by the contract or agreement with such an agency or organization before depositing into the Institutional Repository.</p>
+		<p>This License shall be governed by the laws of the State of Florida, without giving effect to its conflict of law provisions. Any dispute arising from or relating to this Agreement shall be subject to the exclusive jurisdiction of the state and federal courts residing in Miami-Dade County, Florida. You agree to irrevocably waive, to the fullest extent possible, the defense of an inconvenient forum to the maintenance of any action or proceeding in Miami, Florida.</p>
+
+		<div class="feature p-3 mt-4" style="border-radius:.25rem;">
+			<p>BY ACCEPTING THE TERMS AND CONDITIONS OF THIS LICENSE, YOU ACKNOWLEDGE THAT YOU HAVE CAREFULLY READ AND AGREE TO BE BOUND BY THE LICENSE AND ALL RELATED LIBRARY AND UNIVERSITY POLICIES.</p>
+			<p>REVIEWED 2015-06-02</p>
+            <p><a  href="/um-agreement-pdf/" target="blank">Print Deposit Agreement (PDF)</a></p>
+			<form id="depositAgreementForm" method="post" action="{{ action }}">
+				<div class="form-group">
+					<div class="form-check">
+						<input type="checkbox" id="agree" name="agree" value="agree" class="form-check-input"/>
+						<label class="form-check-label"><strong>Please check this box if you agree to the above terms.</strong></label>
+					</div>
+				</div>
+				<input type="hidden" value="{{ deposittype }}" name="deposittype" />
+				<div class="form-group">
+					<button type="submit" class="btn btn-default" name="continuetoinstructions" value="Continue to Instructions">Continue to deposit form</button>
+				</div>
+			</form>
+		</div>
+{% endblock %}

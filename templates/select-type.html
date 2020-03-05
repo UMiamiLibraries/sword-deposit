@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Select deposit type</h1>
+    <div role="tabpanel" class="tab-pane active" id="select-type">
+        <form action="{{ action }}" method="post">
+            <div class="form-group">
+                <input type="radio" id="dissertation" name="deposittype" value="dissertation">
+                    <label for="dissertation">Dissertation</label><br>
+                <input type="radio" id="master" name="deposittype" value="masters">
+                    <label for="master">Master</label><br>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+{% endblock %}

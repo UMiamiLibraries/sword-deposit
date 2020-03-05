@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+
+	{% if status == 201 %}
+		<p>Your file was deposited successfully</p>
+	{% else %}
+		<p>Something went wrong with your deposit.</p>
+	{% endif %}
+
+	<p>{{ status}}</p>
+	<p>{{ response }}</p>
+
+{% endblock %}
