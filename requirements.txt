@@ -1,0 +1,8 @@
+click
+Flask
+itsdangerous
+Jinja2
+MarkupSafe
+Werkzeug
+requests
+lxml
