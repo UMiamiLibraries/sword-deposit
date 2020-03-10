@@ -1,15 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Select deposit type</h1>
-    <div role="tabpanel" class="tab-pane active" id="select-type">
-        <form action="{{ action }}" method="post">
-            <div class="form-group">
-                <input type="radio" id="dissertation" name="deposittype" value="dissertation">
-                    <label for="dissertation">Dissertation</label><br>
-                <input type="radio" id="master" name="deposittype" value="masters">
-                    <label for="master">Master</label><br>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-    </div>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active">1. Select deposit type</li>
+  </ol>
+</nav>
+
+    <h1>Select Deposit Type</h1>
+
+    <form action="{{ action }}" method="post">
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-lg btn-block" name="deposittype" value="dissertation">
+                Dissertation</button>
+            <button type="submit" class="btn btn-primary btn-lg btn-block" name="deposittype" value="dissertation">
+                Masters</button>
+        </div>
+    </form>
 {% endblock %}

@@ -1,9 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">1. Select deposit type</li>
+    <li class="breadcrumb-item active">2. Accept Agreement</li>
+  </ol>
+</nav>
 		<h2>The University of Miami Institutional Repository Deposit Agreement – Open Access Dissertations</h2>
 		<h3>Deposit Agreement<br />
 			Non-Exclusive Distribution and Preservation License
 		</h3>
+		<p><a  href="/um-agreement-pdf/" target="blank">Download Deposit Agreement (.pdf)</a></p>
 		<p>In order to properly administer the University of Miami Libraries Institutional Repository and to preserve the contents for future use, the University of Miami (the "University") requires certain permissions and warrants from you, the author(s) and/or copyright owner of content and materials submitted to the Institutional Repository (the "Work"). If you are the copyright owner of the Work, by accepting the terms of this Non-Exclusive Distribution and Preservation License ("License"), you still retain copyright to your Work and do not give up the right to submit the Work to publishers or other repositories. If you are not the copyright owner, you represent that the copyright owner has given you permission to deposit the Work.</p>
 		<p>By accepting (clicking through) this License, you grant to the University the non-exclusive right to reproduce, translate (as described below), and distribute the Work, including the descriptive information (metadata) and abstract, in any format or medium worldwide and royalty-free, including, but not limited to, publication over the Internet, except as provided for by an addendum to this License.</p>
 		<p>When provided, the University will clearly identify your name(s) as the author(s) or copyright owner(s) of the Work as well as the name(s) of the copyright owner(s) if different from your name(s), include a statement of your copyright, and will not make any alteration, other than as allowed by this License, to your Work.</p>
@@ -23,21 +31,23 @@
 		<p>If the Work is based upon work that has been sponsored or supported by an agency or organization other than the University, you must fulfill any right of review or other obligations required by the contract or agreement with such an agency or organization before depositing into the Institutional Repository.</p>
 		<p>This License shall be governed by the laws of the State of Florida, without giving effect to its conflict of law provisions. Any dispute arising from or relating to this Agreement shall be subject to the exclusive jurisdiction of the state and federal courts residing in Miami-Dade County, Florida. You agree to irrevocably waive, to the fullest extent possible, the defense of an inconvenient forum to the maintenance of any action or proceeding in Miami, Florida.</p>
 
-		<div class="feature p-3 mt-4" style="border-radius:.25rem;">
-			<p>BY ACCEPTING THE TERMS AND CONDITIONS OF THIS LICENSE, YOU ACKNOWLEDGE THAT YOU HAVE CAREFULLY READ AND AGREE TO BE BOUND BY THE LICENSE AND ALL RELATED LIBRARY AND UNIVERSITY POLICIES.</p>
-			<p>REVIEWED 2015-06-02</p>
-            <p><a  href="/um-agreement-pdf/" target="blank">Print Deposit Agreement (PDF)</a></p>
-			<form id="depositAgreementForm" method="post" action="{{ action }}">
-				<div class="form-group">
-					<div class="form-check">
-						<input type="checkbox" id="agree" name="agree" value="agree" class="form-check-input"/>
-						<label class="form-check-label"><strong>Please check this box if you agree to the above terms.</strong></label>
+		<div class="card bg-light">
+			<div class="card-body">
+				<p class="card-text">BY ACCEPTING THE TERMS AND CONDITIONS OF THIS LICENSE, YOU ACKNOWLEDGE THAT YOU HAVE CAREFULLY READ AND AGREE TO BE BOUND BY THE LICENSE AND ALL RELATED LIBRARY AND UNIVERSITY POLICIES.</p>
+				<p class="card-text">REVIEWED 2015-06-02</p>
+				<form id="depositAgreementForm" method="post" action="{{ action }}">
+					<div class="form-group">
+						<div class="form-check">
+							<input type="checkbox" id="agree" name="agree" value="agree" class="form-check-input"  style="width: 20px;height: 20px;" required/>
+							<label class="form-check-label"><strong>Please check this box if you agree to the above terms.</strong></label>
+						</div>
 					</div>
-				</div>
-				<input type="hidden" value="{{ deposittype }}" name="deposittype" />
-				<div class="form-group">
-					<button type="submit" class="btn btn-default" name="continuetoinstructions" value="Continue to Instructions">Continue to deposit form</button>
-				</div>
-			</form>
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary" value="{{ deposittype }}" name="deposittype">
+							Continue to deposit form</button>
+					</div>
+				</form>
+			</div>
 		</div>
+<br>
 {% endblock %}

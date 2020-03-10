@@ -1,13 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
 
-	{% if status == 201 %}
-		<p>Your file was deposited successfully</p>
-	{% else %}
-		<p>Something went wrong with your deposit.</p>
-	{% endif %}
+	<div class="jumbotron text-center">
+		<h1 class="display-3">Thank you for your deposit.</h1>
+		<p class="lead">Title: {{ form.title }}</p>
+		<p class="lead">Author: {{ form.fname }} {% if form.mname %}{{ form.mname }} {% endif %}{{ form.lname }}</p>
+		<p class="lead">Abstract: {{ form.abstract }}</p>
+		<p class="lead">Degree Awarded: {{ form.degreename.split(",")[1]}}</p>
+		<p class="lead">Availability: {{ form.availability}}</p>
+		{% if form.keywords %}
+			<p class="lead">
+				Keywords: {% for keyword in form.keywords %}{{ keywords }}{% endfor %}
+			</p>
+		{% endif %}
+		<p class="lead">
+			File(s): {% for file in form.files %}{{ file.filename }} {{ file }}{% endfor %}
+		</p>
+	</div>
+	<div>
+		<p>{{ status }}</p>
+		<p>{{ response }}</p>
+	</div>
 
-	<p>{{ status}}</p>
-	<p>{{ response }}</p>
+		{% if status == 201 %}
+		{% else %}
+		{% endif %}
 
 {% endblock %}
