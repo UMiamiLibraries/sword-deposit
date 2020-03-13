@@ -23,7 +23,7 @@
                     title: "An Analysis of Clause Usage in Academic Texts Produced by African-American, Haitian, and
                     Hispanic Community College Students."
                  </p>
-                <input id="title" name="title" class="form-control" value="SWORD deposit" required>
+                <input id="title" name="title" class="form-control" required>
             </div>
         </div>
 
@@ -34,19 +34,19 @@
                 <p class="card-text">Make sure to list the name as seen on the document. Please use a permanent email address that the public will see.</p>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input id="email" name="email" type="email" class="form-control" value="eprieto502@miami.edu" required>
+                    <input id="email" name="authoremail" type="email" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="fname">First Name</label>
-                    <input id="fname" name="fname" class="form-control" value="Eduardo" required>
+                    <input id="fname" name="authorfname" class="form-control"  required>
                 </div>
                 <div class="form-group">
                     <label for="mname">Middle Name</label>
-                    <input id="mname" name="mname" class="form-control" value="N">
+                    <input id="mname" name="authormname" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="lname">Last Name</label>
-                    <input id="lname" name="lname" class="form-control" value="Prieto" required>
+                    <input id="lname" name="authorlname" class="form-control" required>
                 </div>
             </div>
         </div>
@@ -73,7 +73,7 @@
                 </ul>
                  <div class="form-group">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="availability" id="openaccess" value="open access" checked="checked" required>
+                        <input class="form-check-input" type="radio" name="availability" id="openaccess" value="open access" required>
                         <label class="form-check-label" for="openaccess">Open Access</label>
                     </div>
                     <div class="form-check">
@@ -98,7 +98,7 @@
             <div class="card-body">
                 <div class="form-group">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="degreetype" id="dissertation" value="Dissertation" checked="checked" required>
+                        <input class="form-check-input" type="radio" name="degreetype" id="dissertation" value="Dissertation" required>
                         <label class="form-check-label" for="dissertation">Dissertation</label>
                     </div>
                     <div class="form-check">
@@ -123,7 +123,7 @@
             <div class="card-body">
                 <div class="form-group">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="degreename" id="edd" value="EDD,Doctor of Education (EDD)"checked="checked" required>
+                        <input class="form-check-input" type="radio" name="degreename" id="edd" value="EDD,Doctor of Education (EDD)" required>
                         <label class="form-check-label" for="edd">Doctor of Education (EDD)</label>
                     </div>
                     <div class="form-check">
@@ -135,18 +135,35 @@
                         <label class="form-check-label" for="dma">Doctor of Musical Arts (DMA)</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="degreename" id="phd" value="PHD,Doctor of Philosophy (DMA)">
+                        <input class="form-check-input" type="radio" name="degreename" id="phd" value="PhD,Doctor of Philosophy (PHD)">
                         <label class="form-check-label" for="phd">Doctor of Philosophy (PHD)</label>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- DATE -->
+         <!-- DEPARTMENT -->
+        <div class="card mb-3">
+            <div class="card-header">Department <small class="text-muted">required</small></div>
+            <div class="card-body">
+                <div class="form-group">
+                    <select class="form-control" name="department" required>
+                        <option disabled selected value> -- Select a department -- </option>
+                        <option>Department 1</option>
+                        <option>Department 2</option>
+                        <option>Department 3</option>
+                        <option>Department 4</option>
+                        <option>Department 5</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATE OF DEFENSE-->
          <div class="card mb-3">
              <div class="card-header">Date of Defense <small class="text-muted">required</small></div>
             <div class="card-body">
-                <input id="date" name="date" class="form-control" type="date" value="2020-03-01" required>
+                <input id="date" name="date" class="form-control" type="date" required>
             </div>
         </div>
 
@@ -163,59 +180,59 @@
                 </p>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text">First committee member</span>
+                        <span class="input-group-text">1st committee member</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="First name" name="cmtemember">
-                    <input type="text" class="form-control" placeholder="Middle name">
-                    <input type="text" class="form-control" placeholder="Last name">
+                    <input type="text" class="form-control" placeholder="First name" name="firstcmtemember">
+                    <input type="text" class="form-control" placeholder="Middle name" name="firstcmtemember">
+                    <input type="text" class="form-control" placeholder="Last name" name="firstcmtemember">
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text">Second committee member</span>
+                        <span class="input-group-text">2nd committee member</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="First name" name="cmtemember">
-                    <input type="text" class="form-control" placeholder="Middle name">
-                    <input type="text" class="form-control" placeholder="Last name">
+                    <input type="text" class="form-control" placeholder="First name" name="secondcmtemember">
+                    <input type="text" class="form-control" placeholder="Middle name"name="secondcmtemember">
+                    <input type="text" class="form-control" placeholder="Last name"name="secondcmtemember">
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text">Third committee member</span>
+                        <span class="input-group-text">3rd committee member</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="First name" name="cmtemember">
-                    <input type="text" class="form-control" placeholder="Middle name">
-                    <input type="text" class="form-control" placeholder="Last name">
+                    <input type="text" class="form-control" placeholder="First name" name="thirdcmtemember">
+                    <input type="text" class="form-control" placeholder="Middle name"name="thirdcmtemember">
+                    <input type="text" class="form-control" placeholder="Last name"name="thirdcmtemember">
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text">Fourth committee member</span>
+                        <span class="input-group-text">4th committee member</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="First name" name="cmtemember">
-                    <input type="text" class="form-control" placeholder="Middle name">
-                    <input type="text" class="form-control" placeholder="Last name">
+                    <input type="text" class="form-control" placeholder="First name" name="fourthcmtemember">
+                    <input type="text" class="form-control" placeholder="Middle name"name="fourthcmtemember">
+                    <input type="text" class="form-control" placeholder="Last name"name="fourthcmtemember">
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text">Fifth committee member</span>
+                        <span class="input-group-text">5th committee member</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="First name" name="cmtemember">
-                    <input type="text" class="form-control" placeholder="Middle name">
-                    <input type="text" class="form-control" placeholder="Last name">
+                    <input type="text" class="form-control" placeholder="First name" name="fifthcmtemember">
+                    <input type="text" class="form-control" placeholder="Middle name" name="fifthcmtemember">
+                    <input type="text" class="form-control" placeholder="Last name" name="fifthcmtemember">
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text">Sixth committee member</span>
+                        <span class="input-group-text">6th committee member</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="First name" name="cmtemember">
-                    <input type="text" class="form-control" placeholder="Middle name">
-                    <input type="text" class="form-control" placeholder="Last name">
+                    <input type="text" class="form-control" placeholder="First name" name="sixthcmtemember">
+                    <input type="text" class="form-control" placeholder="Middle name" name="sixthcmtemember">
+                    <input type="text" class="form-control" placeholder="Last name" name="sixthcmtemember">
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text">Seventh committee member</span>
+                        <span class="input-group-text">7th committee member</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="First name" name="cmtemember">
-                    <input type="text" class="form-control" placeholder="Middle name">
-                    <input type="text" class="form-control" placeholder="Last name">
+                    <input type="text" class="form-control" placeholder="First name" name="seventhcmtemember">
+                    <input type="text" class="form-control" placeholder="Middle name" name="seventhcmtemember">
+                    <input type="text" class="form-control" placeholder="Last name" name="seventhcmtemember">
                 </div>
                 <!-- <div class="row">
                         <button type="button" class="btn btn-link">
@@ -235,7 +252,7 @@
                      the Abstract heading that appears in the manuscript. Do not paste directly from a Microsoft Word
                      document. 'Save as' a text file, then copy/paste from the saved file.
                  </p>
-                <textarea class="form-control" id="abstract" name="abstract" rows="3"></textarea>
+                <textarea class="form-control" id="abstract" name="abstract" rows="10"></textarea>
             </div>
         </div>
 

@@ -1,21 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 
-	<div class="jumbotron text-center">
-		<h1 class="display-3">Thank you for your deposit.</h1>
-		<p class="lead">Title: {{ form.title }}</p>
-		<p class="lead">Author: {{ form.fname }} {% if form.mname %}{{ form.mname }} {% endif %}{{ form.lname }}</p>
-		<p class="lead">Abstract: {{ form.abstract }}</p>
-		<p class="lead">Degree Awarded: {{ form.degreename.split(",")[1]}}</p>
-		<p class="lead">Availability: {{ form.availability}}</p>
-		{% if form.keywords %}
-			<p class="lead">
-				Keywords: {% for keyword in form.keywords %}{{ keywords }}{% endfor %}
-			</p>
-		{% endif %}
-		<p class="lead">
-			File(s): {% for file in form.files %}{{ file.filename }} {{ file }}{% endfor %}
-		</p>
+	<div class="jumbotron">
+		<h1 class="display-4">Thank you for your deposit.</h1>
+		<p>Please close when you are done viewing this page.</p>
+		<ul class="list-unstyled">
+			<li>Title: {{ form.title }}</li>
+			<li>Author: {{ form.fname }} {% if form.mname %}{{ form.mname }} {% endif %}{{ form.lname }}</li>
+			<li>Abstract: {{ form.abstract }}</li>
+			<li>Degree Awarded: {{ form.degreename.split(",")[1]}}</li>
+			<li>Availability: {{ form.availability}}</li>
+			{% if form.keywords %}
+				<li>
+					Keywords: {% for keyword in form.keywords %}{{ keywords }}{% endfor %}
+				</li>
+			{% endif %}
+				<li>
+					File(s): {% for file in form.files %}{{ file.filename }} {{ file }}{% endfor %}
+				</li>
+		</ul>
 	</div>
 	<div>
 		<p>{{ status }}</p>

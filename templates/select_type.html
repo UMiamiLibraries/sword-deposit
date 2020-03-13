@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active">1. Select deposit type</li>
+      </ol>
+    </nav>
+
+    <h1>University of Miami - ETD Submission</h1>
+
+    <p>Welcome to the Electronic Thesis and Dissertation  (ETD) submission form. You will need to complete the following tasks:</p>
+    <ol>
+        <li>Select the correct option for yout ETD - Thesis or Dissertation</li>
+        <li>Read and accept the University of Miami Institutional Repository Deposit Agreement</li>
+        <li>Fill in the fields with the correct information about your Theses or Dissertation.</li>
+    </ol>
+
+    <p>Once you have completed these steps your Theses or Dissertation will be placed in the
+    <a href="https://scholarship.miami.edu" target="_blank">University of Miami Institutional Repository</a></p>
+
+    <h3>Select Deposit Type</h3>
+
+    <form action="{{ url_for('etddeposit') }}" method="post">
+        <div class="form-group">
+            <button type="submit" class="btn btn-default" name="deposittype" value="dissertation">
+                Dissertation</button>
+            <button type="submit" class="btn btn-default" name="deposittype" value="dissertation">
+                Masters</button>
+        </div>
+    </form>
+
+{% endblock %}
