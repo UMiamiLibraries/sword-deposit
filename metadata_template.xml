@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<DISS_submission publishing_option="0" embargo_date="2020-07-31" third_party_search="Y">
+<DISS_submission publishing_option="0" embargo_date="" third_party_search="Y">
   <DISS_author>
     <DISS_name>
-      <DISS_surname>Prieto</DISS_surname>
-      <DISS_fname>Eduardo</DISS_fname>
-      <DISS_middle>Nicholas</DISS_middle>
+      <DISS_surname></DISS_surname>
+      <DISS_fname></DISS_fname>
+      <DISS_middle></DISS_middle>
     </DISS_name>
     <DISS_permanent_email></DISS_permanent_email>
   </DISS_author>
-  <DISS_description page_count="130" type="doctoral" external_id="10272695">
+  <DISS_description page_count="" type="" external_id="10272695">
     <DISS_title></DISS_title>
     <DISS_dates>
       <DISS_degree_date></DISS_degree_date>
       <DISS_manuscript_date></DISS_manuscript_date>
+      <DISS_defense_date>2019-05-05</DISS_defense_date>
     </DISS_dates>
     <DISS_degree>
       <DISS_degree_abbreviation></DISS_degree_abbreviation>
@@ -21,50 +22,80 @@
     <DISS_institution>
       <DISS_inst_code>0125</DISS_inst_code>
       <DISS_inst_name>University of Miami</DISS_inst_name>
-      <DISS_inst_department>Industrial Engineering (Engineering)</DISS_inst_department>
+      <DISS_inst_department>International Studies (Arts &amp; Sciences)</DISS_inst_department>
     </DISS_institution>
     <DISS_advisor>
       <DISS_name>
-        <DISS_surname></DISS_surname>
-        <DISS_fname></DISS_fname>
-          <DISS_middle></DISS_middle>
+        <DISS_fname/>
+        <DISS_middle/>
+        <DISS_surname/>
         <DISS_order>1</DISS_order>
       </DISS_name>
     </DISS_advisor>
     <DISS_cmte_member>
       <DISS_name>
-        <DISS_surname></DISS_surname>
-        <DISS_fname></DISS_fname>
+        <DISS_fname/>
+        <DISS_middle/>
+        <DISS_surname/>
+        <DISS_order>1</DISS_order>
+      </DISS_name>
+    </DISS_cmte_member>
+    <DISS_cmte_member>
+      <DISS_name>
+        <DISS_fname/>
+        <DISS_middle/>
+        <DISS_surname/>
         <DISS_order>2</DISS_order>
       </DISS_name>
     </DISS_cmte_member>
     <DISS_cmte_member>
       <DISS_name>
-        <DISS_surname></DISS_surname>
-        <DISS_fname></DISS_fname>
-        <DISS_middle></DISS_middle>
+        <DISS_fname/>
+        <DISS_middle/>
+        <DISS_surname/>
         <DISS_order>3</DISS_order>
       </DISS_name>
     </DISS_cmte_member>
     <DISS_cmte_member>
       <DISS_name>
-        <DISS_surname>Eltoukhy</DISS_surname>
-        <DISS_fname>Moataz</DISS_fname>
+        <DISS_fname/>
+        <DISS_middle/>
+        <DISS_surname/>
         <DISS_order>4</DISS_order>
+      </DISS_name>
+    </DISS_cmte_member>
+    <DISS_cmte_member>
+      <DISS_name>
+        <DISS_fname/>
+        <DISS_middle/>
+        <DISS_surname/>
+        <DISS_order>5</DISS_order>
+      </DISS_name>
+    </DISS_cmte_member>
+    <DISS_cmte_member>
+      <DISS_name>
+        <DISS_fname/>
+        <DISS_middle/>
+        <DISS_surname/>
+        <DISS_order>6</DISS_order>
+      </DISS_name>
+    </DISS_cmte_member>
+    <DISS_cmte_member>
+      <DISS_name>
+        <DISS_fname/>
+        <DISS_middle/>
+        <DISS_surname/>
+        <DISS_order>7</DISS_order>
       </DISS_name>
     </DISS_cmte_member>
     <DISS_categorization>
       <DISS_category>
-        <DISS_cat_code>0537</DISS_cat_code>
-        <DISS_cat_desc>Engineering</DISS_cat_desc>
+        <DISS_cat_code></DISS_cat_code>
+        <DISS_cat_desc></DISS_cat_desc>
       </DISS_category>
       <DISS_category>
-        <DISS_cat_code>0546</DISS_cat_code>
-        <DISS_cat_desc>Industrial engineering</DISS_cat_desc>
-      </DISS_category>
-      <DISS_category>
-        <DISS_cat_code>0709</DISS_cat_code>
-        <DISS_cat_desc>Transportation</DISS_cat_desc>
+        <DISS_cat_code></DISS_cat_code>
+        <DISS_cat_desc></DISS_cat_desc>
       </DISS_category>
       <DISS_keyword></DISS_keyword>
       <DISS_keyword></DISS_keyword>
@@ -77,8 +108,6 @@
   </DISS_description>
   <DISS_content>
     <DISS_abstract>
-      <DISS_para>first paragraph enp.</DISS_para>
-      <DISS_para>Second paragraph enp.</DISS_para>
     </DISS_abstract>
     <DISS_binary type="PDF">hello_eddie.txt</DISS_binary>
   </DISS_content>
