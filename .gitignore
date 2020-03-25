@@ -4,3 +4,12 @@ node_modules/
 # IDE
 .idea/
 sword-deposit.iml
+
+# config
+config.py
+
+# log file
+deposits.log
+
+# python cache
+__pycache__/
