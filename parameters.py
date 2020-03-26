@@ -1,4 +1,6 @@
 formdata = {
+    'deposittype': "",
+    'dates': {},
     'dissertation': {
         'degreename': {
             'EDD': 'Doctor of Education (EDD)',
@@ -8,41 +10,36 @@ formdata = {
         },
         'degreetype': {
             'dissertation': 'Dissertation',
-            'doctoralessay': 'Doctoral Essay',
-            'doctoraltreatise': 'Doctoral Treatise',
-            'lecturerecitalessay': 'Lecture Recital Essay'
+            'essay': 'Doctoral Essay',
+            'treatise': 'Doctoral Treatise',
+            'lecture': 'Lecture Recital Essay'
+        }
+    },
+    'masters': {
+        'degreename': {
+            'MSArch': 'Master of Architecture (MSArch)',
+            'MA': 'Master of Arts (MA)',
+            'DMA': 'Master of Engineering (ME)',
+            'MFA': 'Master of Fine Arts (MFA)',
+            'MM': 'Master of Music (MM)',
+            'MSc': 'Master of Science (MS)',
+            'MSEd': 'Master of Education (MSEd)'
+
         }
     },
     'languages': {
-        'zh': 'Chinese',
         'es': 'Spanish',
-        'fr': 'Chinese',
+        'ar': 'Arabic',
+        'zh': 'Chinese',
+        'fr': 'French',
         'de': 'German',
-        'pt': 'Portuguese',
+        'hi': 'Hindi',
         'it': 'Italian',
         'ja': 'Japanese',
-        'ru': 'Russian',
-        'ja': 'Japanese',
-        'hi': 'Hindi',
-        'ar': 'Arabic',
         'ko': 'Korean',
+        'pt': 'Portuguese',
+        'ru': 'Russian'
     },
-    #masters needs to be updated
-    'masters': {
-        'degreename': {
-            'EDD': 'Doctor of Education (EDD)',
-            'DA': 'Doctor of Arts (DA)',
-            'DMA': 'Doctor of Musical Arts (DMA)',
-            'PhD': 'Doctor of Philosophy (PHD)'
-        },
-        'degreetype': {
-            'dissertation': 'Dissertation',
-            'doctoralessay': 'Doctoral Essay',
-            'doctoraltreatise': 'Doctoral Treatise',
-            'lecturerecitalessay': 'Lecture Recital Essay'
-        }
-    },
-    #
     'departments': {
         'Art History (Arts and Sciences)',
         'Biology',

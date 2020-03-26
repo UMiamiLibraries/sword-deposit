@@ -48,14 +48,18 @@ def processdeposit(deposittype):
     metadata_tree.find("//DISS_author//DISS_permanent_email").text = request.form['authoremail']
     # set title
     metadata_tree.find("//DISS_description//DISS_title").text = request.form['title']
+    # set project type
+    metadata_tree.find("//DISS_description//DISS_project_type").text = request.form['degreetype']
+    metadata_tree.find("//DISS_description").set("type", request.form['degreetype'])
     # set dates
     #DEGREE DATE REQUIRED
     metadata_tree.find("//DISS_description//DISS_dates//DISS_degree_date").text = request.form['pubdate']
     metadata_tree.find("//DISS_description//DISS_dates//DISS_manuscript_date").text = request.form['pubdate']
+    metadata_tree.find("//DISS_description//DISS_dates//DISS_defense_date").text = request.form['defensedate']
     # set degree
     metadata_tree.find("//DISS_description//DISS_degree//DISS_degree_abbreviation").text = request.form['degreename']
-    #metadata_tree.find("//DISS_description//DISS_degree//DISS_degree_name").text = formdata["dissertation"]["degreename"].get(request.form['degreename'])
-
+    metadata_tree.find("//DISS_description//DISS_degree//DISS_degree_name").text = formdata["dissertation"]["degreename"].get(request.form['degreename'])
+    #set department
     metadata_tree.find("//DISS_description//DISS_inst_department").text = request.form['department']
     # set advisors
     # metadata_tree.find("//DISS_description//DISS_advisor//DISS_name//DISS_surname").text = "AdvisorL"
@@ -217,12 +221,11 @@ def index():
             session['step'] = "agreement"
             return render_template('agreement.html')
         if session['step'] == "agreement":
-            dates = getdates()
+            formdata['dates'] = getdates()
+            formdata['deposittype'] = session['deposittype']
             session['step'] = "depositform"
-            if session['deposittype'] == "dissertation":
-                return render_template("dissertation_form.html", dates=dates, data=formdata)
-            elif session['deposittype'] == "masters":
-                return render_template("masters_form.html", dates=dates)
+            if session['deposittype']:
+                return render_template("deposit_form.html", formdata=formdata)
             else:
                 return render_template('error.html')
         if session['step'] == "depositform":
