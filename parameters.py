@@ -40,7 +40,7 @@ formdata = {
         'pt': 'Portuguese',
         'ru': 'Russian'
     },
-    'departments': {
+    'departments': [
         'Art History (Arts and Sciences)',
         'Biology',
         'Biology (Arts and Sciences)',
@@ -191,7 +191,7 @@ formdata = {
         'Public Health Sciences (Medicine)',
         'Physical Therapy',
         'Physical Therapy (Medicine)',
-    },
+    ],
     'topics': {
         'Fine and Performing Arts': {
             'Art criticism': '0365',

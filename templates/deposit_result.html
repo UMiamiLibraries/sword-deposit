@@ -5,18 +5,18 @@
 		<h1 class="display-4">Thank you for your deposit.</h1>
 		<p>Please close when you are done viewing this page.</p>
 		<ul class="list-unstyled">
-			<li>Title: {{ form.title }}</li>
-			<li>Author: {{ form.fname }} {% if form.mname %}{{ form.mname }} {% endif %}{{ form.lname }}</li>
-			<li>Abstract: {{ form.abstract }}</li>
-			<li>Degree Awarded: {{ form.degreename.split(",")[1]}}</li>
-			<li>Availability: {{ form.availability}}</li>
+			<li><strong>Title:</strong> {{ form.title }}</li>
+			<li><strong>Author:</strong> {{ form.authorfname }} {% if form.authormname %}{{ form.authormname }} {% endif %}{{ form.authorlname }}</li>
+			<li><strong>Abstract:</strong> {{ form.abstract[:100] }}...</li>
+			<li><strong>Degree Awarded:</strong> {{ form.degreename.split(",")[1]}}</li>
+			<li><strong>Availability:</strong> {{ form.availability}}</li>
 			{% if form.keywords %}
 				<li>
-					Keywords: {% for keyword in form.keywords %}{{ keywords }}{% endfor %}
+					<strong>Keywords:</strong> {% for keyword in form.getlist('keywords') %}{{ keyword }}, {% endfor %}
 				</li>
 			{% endif %}
 				<li>
-					File(s): {% for file in form.files %}{{ file.filename }} {{ file }}{% endfor %}
+					<strong>File(s):</strong> {% for file in files.getlist('files') %}{{ file.filename }},{% endfor %}
 				</li>
 		</ul>
 	</div>

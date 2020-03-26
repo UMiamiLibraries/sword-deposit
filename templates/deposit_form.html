@@ -9,7 +9,7 @@
       </ol>
     </nav>
 
-    <h1>Dissertation Deposit Form</h1>
+    <h1>{{ formdata.deposittype.capitalize() }} Deposit Form</h1>
 
     <form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data">
 
@@ -56,7 +56,7 @@
             <div class="card-header">Publication Date</div>
             <div class="card-body">
                 <p class="card-text">The publication date is set to today's date and cannot be modified.</p>
-                <input id="pubdate" name="pubdate" type="text" class="form-control" value="{{ dates.today }}" readonly>
+                <input id="pubdate" name="pubdate" type="text" class="form-control" value="{{ formdata.dates.today }}" readonly>
             </div>
 
         </div>
@@ -65,7 +65,7 @@
          <div class="card mb-3">
              <div class="card-header">Date of Defense <small class="text-muted">required</small></div>
             <div class="card-body">
-                <input id="defensedate" name="defensedate" class="form-control" type="date" max="{{ dates.today }}" required>
+                <input id="defensedate" name="defensedate" class="form-control" type="date" max="{{ formdata.dates.today }}" required>
             </div>
         </div>
 
@@ -85,47 +85,58 @@
                         <label class="form-check-label" for="openaccess">Open Access</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="availability" id="embargoone" value="{{ dates.oneyear }}">
-                        <label class="form-check-label" for="embargoone">Embargo - 1 year ({{ dates.oneyear }})</label>
+                        <input class="form-check-input" type="radio" name="availability" id="embargoone" value="{{ formdata.dates.oneyear }}">
+                        <label class="form-check-label" for="embargoone">Embargo - 1 year ({{ formdata.dates.oneyear }})</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="availability" id="embargotwo" value="{{ dates.eighteenmonths }}">
-                        <label class="form-check-label" for="embargotwo">Embargo - 18 months ({{ dates.eighteenmonths }})</label>
+                        <input class="form-check-input" type="radio" name="availability" id="embargotwo" value="{{ formdata.dates.eighteenmonths }}">
+                        <label class="form-check-label" for="embargotwo">Embargo - 18 months ({{ formdata.dates.eighteenmonths }})</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="availability" id="embargothree" value="{{ dates.twoyears }}">
-                        <label class="form-check-label" for="embargothree">Embargo - 2 years ({{ dates.twoyears }})</label>
+                        <input class="form-check-input" type="radio" name="availability" id="embargothree" value="{{ formdata.dates.twoyears }}">
+                        <label class="form-check-label" for="embargothree">Embargo - 2 years ({{ formdata.dates.twoyears }})</label>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- DEGREE TYPE-->
-        <div class="card mb-3">
-            <div class="card-header">Degree Type <small class="text-muted">required</small></div>
-            <div class="card-body">
-                <div class="form-group">
-                    {% for type in data.dissertation.degreetype %}
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="degreetype" id="{{ type }}" value="{{ data.dissertation.degreetype.get(type) }}" required>
-                            <label class="form-check-label" for="{{ type }}">{{ data.dissertation.degreetype.get(type) }}</label>
-                        </div>
-                    {% endfor %}
+        {% if formdata.deposittype == "dissertation" %}
+            <div class="card mb-3">
+                <div class="card-header">Degree Type <small class="text-muted">required</small></div>
+                <div class="card-body">
+                    <div class="form-group">
+                        {% for type in formdata.dissertation.degreetype %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="degreetype" id="{{ type }}" value="{{ type }}" required>
+                                <label class="form-check-label" for="{{ type }}">{{ formdata.dissertation.degreetype.get(type) }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
 
         <!-- DEGREE NAME-->
         <div class="card mb-3">
             <div class="card-header">Degree Name <small class="text-muted">required</small></div>
             <div class="card-body">
                 <div class="form-group">
-                    {% for name in data.dissertation.degreename %}
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="degreename" id="{{ name }}" value="{{ name }}" required>
-                            <label class="form-check-label" for="{{ name }}">{{ data.dissertation.degreename.get(name) }}</label>
-                        </div>
-                    {% endfor %}
+                    {% if formdata.deposittype == "dissertation" %}
+                        {% for name in formdata.dissertation.degreename %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="degreename" id="{{ name }}" value="{{ name }}" required>
+                                <label class="form-check-label" for="{{ name }}">{{ formdata.dissertation.degreename.get(name) }}</label>
+                            </div>
+                        {% endfor %}
+                    {% elif formdata.deposittype == "masters" %}
+                        {% for name in formdata.masters.degreename %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="degreename" id="{{ name }}" value="{{ name }}" required>
+                                <label class="form-check-label" for="{{ name }}">{{ formdata.masters.degreename.get(name) }}</label>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -137,7 +148,7 @@
                 <div class="form-group">
                     <select class="form-control" name="department" required>
                         <option disabled selected value>Select a department</option>
-                        {% for department in data.departments %}
+                        {% for department in formdata.departments %}
                             <option name="department" value="{{ department }}">{{ department }}</option>
                         {% endfor %}
                     </select>
@@ -226,7 +237,7 @@
             <div class="card-header">Abstract</div>
             <div class="card-body">
                 <p class="card-text">
-                    250 word limit. <strong>Please note that your text will get cut off if you reach the limit.</strong>
+                    1800 character limit. <strong>Please note that your text will get cut off if you reach the limit.</strong>
                     Do not include the Abstract heading that appears in the manuscript. Do not paste directly from a Microsoft Word
                     document. 'Save as' a text file, then copy/paste from the saved file.
                  </p>
@@ -242,9 +253,9 @@
                 <div class="form-group">
                     <select class="form-control" name="topic" required>
                         <option disabled selected value>Select a primary category</option>
-                        {% for category in data.topics %}
+                        {% for category in formdata.topics %}
                             <option disabled>{{ category.upper() }}</option>
-                            {% for topic in data.topics.get(category) %}
+                            {% for topic in formdata.topics.get(category) %}
                                 <option>   {{ topic }}</option>
                             {% endfor %}
                         {% endfor %}
@@ -262,7 +273,7 @@
                     Six (6) keyword limit. Provide subject keywords or keyword phrases that will help others find your
                     work.  Think about what words people might use to search, and what the important concepts in your
                     work are. Use sentence case for keywords (i.e. capitalize the first word of each keyword phrase,
-                    but not subsequent words). Spell out all acronyms. It would be beneficial to use a controlled list
+                    but not subsequent words). Spell out all acronyms. You are encouraged to use a controlled list
                     such as the
                     <a href="http://id.loc.gov/authorities/subjects.html" target="_blank">Library of Congress Subject Headings</a>
                  </p>
@@ -290,12 +301,6 @@
                         <input type="text" class="form-control" id="keywordsix" name="keywords">
                     </div>
                 </div>
-               <!-- <div class="row">
-                        <button type="button" class="btn btn-link">
-                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                            Add more keywords
-                        </button>
-                </div> -->
             </div>
         </div>
 
@@ -310,8 +315,8 @@
                  </p>
                 <select class="form-control" id="language" name="language">
                     <option value="EN" default required>English</option>
-                    {% for language in data.languages %}
-                        <option value="{{ language }}">{{ data.languages.get(language) }}</option>
+                    {% for language in formdata.languages %}
+                        <option value="{{ language }}">{{ formdata.languages.get(language) }}</option>
                     {% endfor %}
                 </select>
             </div>
