@@ -10,7 +10,7 @@ from lxml import etree
 from flask import Flask, render_template, request, send_file, session
 
 import config
-import parameters
+from parameters import formdata
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -31,13 +31,13 @@ def clearsession():
     session.pop('step', None)
 
 
-def processdeposit(depositform):
+def processdeposit(deposittype):
     print(request.form)
     # load blank metadata tree
     metadata_tree = etree.parse('static/metadata_template.xml')
     # populate fields from form
     # set type
-    if request.form['deposittype'] == "dissertation":
+    if deposittype == "dissertation":
         metadata_tree.find("//DISS_description").set("type", "doctoral")
     else:
         metadata_tree.find("//DISS_description").set("type", "masters")
@@ -49,14 +49,14 @@ def processdeposit(depositform):
     # set title
     metadata_tree.find("//DISS_description//DISS_title").text = request.form['title']
     # set dates
-    metadata_tree.find("//DISS_description//DISS_dates//DISS_degree_date").text = request.form['awarddate']
+    #DEGREE DATE REQUIRED
+    metadata_tree.find("//DISS_description//DISS_dates//DISS_degree_date").text = request.form['pubdate']
     metadata_tree.find("//DISS_description//DISS_dates//DISS_manuscript_date").text = request.form['pubdate']
     # set degree
     metadata_tree.find("//DISS_description//DISS_degree//DISS_degree_abbreviation").text = request.form['degreename']
-    metadata_tree.find("//DISS_description//DISS_degree//DISS_degree_name").text = parameters.dissertation.get(request.form['degreename'])
+    #metadata_tree.find("//DISS_description//DISS_degree//DISS_degree_name").text = formdata["dissertation"]["degreename"].get(request.form['degreename'])
 
-    metadata_tree.find(
-        "//DISS_description//DISS_inst_department").text = "01UOML_INST___d7f4107376541070fd0ecbf5005e6729"
+    metadata_tree.find("//DISS_description//DISS_inst_department").text = request.form['department']
     # set advisors
     # metadata_tree.find("//DISS_description//DISS_advisor//DISS_name//DISS_surname").text = "AdvisorL"
     # metadata_tree.find("//DISS_description//DISS_advisor//DISS_name//DISS_fname").text = "AdvisorF"
@@ -124,8 +124,8 @@ def processdeposit(depositform):
         metadata_tree.find("//DISS_repository//DISS_access_option").text = "9575220150002976"
         metadata_tree.find("//DISS_repository//DISS_delayed_release").text = request.form['availability']
     # set categories
-    metadata_tree.find("//DISS_description//DISS_categorization//DISS_category//DISS_cat_code").text = parameters.topics.get(request.form['topic'])
-    metadata_tree.find("//DISS_description//DISS_categorization//DISS_category//DISS_cat_desc").text = request.form['topic']
+    #metadata_tree.find("//DISS_description//DISS_categorization//DISS_category//DISS_cat_code").text = parameters.topics.get(request.form['topic'])
+    #metadata_tree.find("//DISS_description//DISS_categorization//DISS_category//DISS_cat_desc").text = request.form['topic']
     # set keywords
     keywords = metadata_tree.findall("//DISS_description//DISS_categorization//DISS_keyword")
     for i, keyword in enumerate(request.form.getlist('keywords')):
@@ -137,8 +137,7 @@ def processdeposit(depositform):
             para = etree.SubElement(metadata_tree.find("//DISS_content//DISS_abstract"), "DISS_para")
             para.text = paragraph
     # set language - default is en
-    # metadata_tree.find("//DISS_description//DISS_categorization//DISS_language").text = request.form['language']
-
+    metadata_tree.find("//DISS_description//DISS_categorization//DISS_language").text = request.form['language']
     # set file names
     file_name = request.form['authorlname'] + "_" + request.form['authorfname'] + "_" + ''.join(
         e for e in request.form['title'] if e.isalnum())
@@ -189,7 +188,6 @@ def processdeposit(depositform):
     os.remove(txt_file)
 
     return r.status_code
-    #return 201
 
 
 @app.errorhandler(400)
@@ -222,19 +220,17 @@ def index():
             dates = getdates()
             session['step'] = "depositform"
             if session['deposittype'] == "dissertation":
-                params = parameters.dissertation
-                return render_template("dissertation_form.html", dates=dates, params=params, topics=parameters.topics)
+                return render_template("dissertation_form.html", dates=dates, data=formdata)
             elif session['deposittype'] == "masters":
                 return render_template("masters_form.html", dates=dates)
             else:
                 return render_template('error.html')
         if session['step'] == "depositform":
-            depositresult = processdeposit(request.form)
+            depositresult = processdeposit(request.form['deposittype'])
             if depositresult == 201:
                 return render_template("deposit_result.html", form=request.form, files=request.files)
             else:
-                #return render_template('error.html')
-                return depositresult
+                return render_template('error.html')
         else:
             return render_template('error.html')
 

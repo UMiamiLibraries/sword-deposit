@@ -11,9 +11,8 @@
   <DISS_description page_count="" type="" external_id="10272695">
     <DISS_title></DISS_title>
     <DISS_dates>
-      <DISS_degree_date></DISS_degree_date>
+      <DISS_degree_date>2019-01-01</DISS_degree_date>
       <DISS_manuscript_date></DISS_manuscript_date>
-      <DISS_defense_date>2019-05-05</DISS_defense_date>
     </DISS_dates>
     <DISS_degree>
       <DISS_degree_abbreviation></DISS_degree_abbreviation>
@@ -22,7 +21,7 @@
     <DISS_institution>
       <DISS_inst_code>0125</DISS_inst_code>
       <DISS_inst_name>University of Miami</DISS_inst_name>
-      <DISS_inst_department>International Studies (Arts &amp; Sciences)</DISS_inst_department>
+      <DISS_inst_department></DISS_inst_department>
     </DISS_institution>
     <DISS_advisor>
       <DISS_name>
