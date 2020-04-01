@@ -110,7 +110,7 @@
   <DISS_content>
     <DISS_abstract>
     </DISS_abstract>
-    <DISS_binary type="PDF">hello_eddie.txt</DISS_binary>
+    <DISS_binary>hello_eddie.txt</DISS_binary>
   </DISS_content>
   <DISS_repository>
     <DISS_version/>

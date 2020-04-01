@@ -33,6 +33,13 @@ def clearsession():
 
 def processdeposit(deposittype):
     print(request.form)
+    print(request.files['primaryfile'].filename)
+    print(request.files.getlist('supplementalfiles'))
+    #save files
+    request.files['primaryfile'].save(request.files['primaryfile'].filename)
+    for file in request.files.getlist("supplementalfiles"):
+        if file:
+            file.save(file.filename)
     # load blank metadata tree
     metadata_tree = etree.parse('static/metadata_template.xml')
     # populate fields from form
@@ -41,6 +48,12 @@ def processdeposit(deposittype):
         metadata_tree.find("//DISS_description").set("type", "doctoral")
     else:
         metadata_tree.find("//DISS_description").set("type", "masters")
+    # set files
+    metadata_tree.find("//DISS_content//DISS_binary").text = request.files['primaryfile'].filename
+    for file in request.files.getlist("supplementalfiles"):
+        if file:
+            attachment = etree.SubElement(metadata_tree.find("//DISS_content"), "attachment")
+            attachment.text = file.filename
     # set author name and email
     metadata_tree.find("//DISS_author//DISS_name//DISS_surname").text = request.form['authorlname']
     metadata_tree.find("//DISS_author//DISS_name//DISS_fname").text = request.form['authorfname']
@@ -50,7 +63,7 @@ def processdeposit(deposittype):
     metadata_tree.find("//DISS_description//DISS_title").text = request.form['title']
     # set project type
     metadata_tree.find("//DISS_description//DISS_project_type").text = request.form['degreetype']
-    metadata_tree.find("//DISS_description").set("type", request.form['degreetype'])
+    #metadata_tree.find("//DISS_description").set("type", request.form['degreetype'])
     # set dates
     #DEGREE DATE REQUIRED
     metadata_tree.find("//DISS_description//DISS_dates//DISS_degree_date").text = request.form['pubdate']
@@ -121,7 +134,7 @@ def processdeposit(deposittype):
     # metadata_tree.find("//DISS_description//DISS_cmte_member//DISS_name//DISS_fname").text = "CmteF"
     # metadata_tree.find("//DISS_description//DISS_cmte_member//DISS_name//DISS_order").text = "1"
 
-    # set embargo
+    # set availability
     if request.form['availability'] == "open access":
         metadata_tree.find("//DISS_repository//DISS_access_option").text = "Research:open"
     else:
@@ -156,8 +169,8 @@ def processdeposit(deposittype):
     # contextlib.closing needed for python 2.6
     with contextlib.closing(ZipFile(zip_file, "w")) as depositzip:
         depositzip.write(xml_file)
-        for file in request.files.getlist("files"):
-            file.save(file.filename)
+        depositzip.write(request.files['primaryfile'].filename)
+        for file in request.files.getlist("supplementalfiles"):
             depositzip.write(file.filename)
 
     # encode the zip file and create sword call file
@@ -185,13 +198,16 @@ def processdeposit(deposittype):
     clearsession()
 
     # delete the files
-    for file in request.files.getlist("files"):
-        os.remove(file.filename)
+    os.remove(request.files['primaryfile'].filename)
+    for file in request.files.getlist("supplementalfiles"):
+        if file:
+            os.remove(file.filename)
     os.remove(zip_file)
     os.remove(xml_file)
     os.remove(txt_file)
 
     return r.status_code
+    #return 201
 
 
 @app.errorhandler(400)
