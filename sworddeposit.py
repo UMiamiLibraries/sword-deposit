@@ -139,7 +139,7 @@ def processdeposit(deposittype):
         metadata_tree.find("//DISS_repository//DISS_access_option").text = "Research:open"
     else:
         metadata_tree.find("//DISS_repository//DISS_access_option").text = "9575220150002976"
-        metadata_tree.find("//DISS_repository//DISS_delayed_release").text = request.form['availability']
+        #metadata_tree.find("//DISS_repository//DISS_delayed_release").text = request.form['availability']
     # set categories
     #metadata_tree.find("//DISS_description//DISS_categorization//DISS_category//DISS_cat_code").text = parameters.topics.get(request.form['topic'])
     #metadata_tree.find("//DISS_description//DISS_categorization//DISS_category//DISS_cat_desc").text = request.form['topic']
@@ -171,7 +171,8 @@ def processdeposit(deposittype):
         depositzip.write(xml_file)
         depositzip.write(request.files['primaryfile'].filename)
         for file in request.files.getlist("supplementalfiles"):
-            depositzip.write(file.filename)
+            if file.filename != '':
+                depositzip.write(file.filename)
 
     # encode the zip file and create sword call file
     encodedzip = base64.b64encode(open(zip_file, 'rb').read()).decode()
@@ -200,7 +201,7 @@ def processdeposit(deposittype):
     # delete the files
     os.remove(request.files['primaryfile'].filename)
     for file in request.files.getlist("supplementalfiles"):
-        if file:
+        if file.filename != '':
             os.remove(file.filename)
     os.remove(zip_file)
     os.remove(xml_file)
@@ -250,6 +251,7 @@ def index():
                 return render_template("deposit_result.html", form=request.form, files=request.files)
             else:
                 return render_template('error.html')
+                #return depositresult
         else:
             return render_template('error.html')
 
