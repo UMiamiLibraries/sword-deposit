@@ -8,7 +8,7 @@
     </DISS_name>
     <DISS_permanent_email></DISS_permanent_email>
   </DISS_author>
-  <DISS_description type="treatise" external_id="10272695">
+  <DISS_description type="" external_id="10272695">
     <DISS_title></DISS_title>
     <DISS_project_type></DISS_project_type>
     <DISS_dates>
@@ -110,12 +110,12 @@
   <DISS_content>
     <DISS_abstract>
     </DISS_abstract>
-    <DISS_binary type="PDF">hello_eddie.txt</DISS_binary>
+    <DISS_binary/>
   </DISS_content>
   <DISS_repository>
     <DISS_version/>
     <DISS_agreement_decision_date/>
-    <DISS_acceptance>0</DISS_acceptance>
+    <DISS_acceptance>1</DISS_acceptance>
     <DISS_delayed_release/>
     <DISS_access_option/>
   </DISS_repository>
