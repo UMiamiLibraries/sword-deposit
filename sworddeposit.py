@@ -36,13 +36,14 @@ def processdeposit(deposittype):
     print(request.files['primaryfile'].filename)
     print(request.files.getlist('supplementalfiles'))
     #save files
-    request.files['primaryfile'].save(request.files['primaryfile'].filename)
+    if request.files['primaryfile']:
+        request.files['primaryfile'].save(request.files['primaryfile'].filename)
     for file in request.files.getlist("supplementalfiles"):
         if file:
             file.save(file.filename)
     # load blank metadata tree
     metadata_tree = etree.parse('static/metadata_template.xml')
-    # populate fields from form
+    # populate metadata fields
     # set type
     if deposittype == "dissertation":
         metadata_tree.find("//DISS_description").set("type", "doctoral")
@@ -52,8 +53,11 @@ def processdeposit(deposittype):
     metadata_tree.find("//DISS_content//DISS_binary").text = request.files['primaryfile'].filename
     for file in request.files.getlist("supplementalfiles"):
         if file:
-            attachment = etree.SubElement(metadata_tree.find("//DISS_content"), "attachment")
-            attachment.text = file.filename
+            attachment = etree.SubElement(metadata_tree.find("//DISS_content"), "DISS_attachment")
+            attachmentname = etree.SubElement(metadata_tree.find("//DISS_attachment[last()]"), "DISS_file_name")
+            attachmentname.text = file.filename
+            attachmenttype = etree.SubElement(metadata_tree.find("//DISS_attachment[last()]"), "DISS_file_category")
+            attachmenttype.text = "supplemental"
     # set author name and email
     metadata_tree.find("//DISS_author//DISS_name//DISS_surname").text = request.form['authorlname']
     metadata_tree.find("//DISS_author//DISS_name//DISS_fname").text = request.form['authorfname']
@@ -63,7 +67,6 @@ def processdeposit(deposittype):
     metadata_tree.find("//DISS_description//DISS_title").text = request.form['title']
     # set project type
     metadata_tree.find("//DISS_description//DISS_project_type").text = request.form['degreetype']
-    #metadata_tree.find("//DISS_description").set("type", request.form['degreetype'])
     # set dates
     #DEGREE DATE REQUIRED
     metadata_tree.find("//DISS_description//DISS_dates//DISS_degree_date").text = request.form['pubdate']
@@ -79,7 +82,7 @@ def processdeposit(deposittype):
     # metadata_tree.find("//DISS_description//DISS_advisor//DISS_name//DISS_fname").text = "AdvisorF"
     # metadata_tree.find("//DISS_description//DISS_advisor//DISS_name//DISS_order").text = "1"
 
-    # set committe members
+    # set committee members
     cmtemembers = metadata_tree.findall(".//DISS_description//DISS_cmte_member")
     if request.form.getlist('firstcmtemember'):
         cmtemembers[0].find(".//DISS_name//DISS_fname").text = request.form.getlist('firstcmtemember')[0]
@@ -208,7 +211,7 @@ def processdeposit(deposittype):
         if file.filename != '':
             os.remove(file.filename)
     os.remove(zip_file)
-    os.remove(xml_file)
+    #os.remove(xml_file)
     os.remove(txt_file)
 
     return r.status_code
