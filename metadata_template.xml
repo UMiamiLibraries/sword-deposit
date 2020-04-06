@@ -115,7 +115,7 @@
   <DISS_repository>
     <DISS_version/>
     <DISS_agreement_decision_date/>
-    <DISS_acceptance>0</DISS_acceptance>
+    <DISS_acceptance>1</DISS_acceptance>
     <DISS_delayed_release></DISS_delayed_release>
     <DISS_access_option></DISS_access_option>
   </DISS_repository>

@@ -155,6 +155,10 @@ def processdeposit(deposittype):
             para.text = paragraph
     # set language - default is en
     metadata_tree.find("//DISS_description//DISS_categorization//DISS_language").text = request.form['language']
+    # set policy accepted
+    metadata_tree.find("//DISS_repository//DISS_agreement_decision_date").text = request.form['pubdate']
+    
+    
     # set file names
     file_name = request.form['authorlname'] + "_" + request.form['authorfname'] + "_" + ''.join(
         e for e in request.form['title'] if e.isalnum())
