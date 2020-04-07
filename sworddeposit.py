@@ -43,12 +43,15 @@ def processdeposit(deposittype):
             file.save(file.filename)
     # load blank metadata tree
     metadata_tree = etree.parse('static/metadata_template.xml')
+
     # populate metadata fields
+
     # set type
     if deposittype == "dissertation":
         metadata_tree.find("//DISS_description").set("type", "doctoral")
     else:
         metadata_tree.find("//DISS_description").set("type", "masters")
+
     # set files
     metadata_tree.find("//DISS_content//DISS_binary").text = request.files['primaryfile'].filename
     for file in request.files.getlist("supplementalfiles"):
@@ -58,20 +61,34 @@ def processdeposit(deposittype):
             attachmentname.text = file.filename
             attachmenttype = etree.SubElement(metadata_tree.find("//DISS_attachment[last()]"), "DISS_file_category")
             attachmenttype.text = "supplemental"
+
+    print('files done')
+
     # set author name and email
     metadata_tree.find("//DISS_author//DISS_name//DISS_surname").text = request.form['authorlname']
     metadata_tree.find("//DISS_author//DISS_name//DISS_fname").text = request.form['authorfname']
     metadata_tree.find("//DISS_author//DISS_name//DISS_middle").text = request.form['authormname']
     metadata_tree.find("//DISS_author//DISS_permanent_email").text = request.form['authoremail']
+
     # set title
     metadata_tree.find("//DISS_description//DISS_title").text = request.form['title']
+
+    print('about to make a ',deposittype,'deposit')
+
     # set project type
-    metadata_tree.find("//DISS_description//DISS_project_type").text = request.form['degreetype']
+    if deposittype == "dissertation":
+        metadata_tree.find("//DISS_description//DISS_project_type").text = request.form['degreetype']
+
+    print('type done')
+
     # set dates
     #DEGREE DATE REQUIRED
     metadata_tree.find("//DISS_description//DISS_dates//DISS_degree_date").text = request.form['pubdate']
     metadata_tree.find("//DISS_description//DISS_dates//DISS_manuscript_date").text = request.form['pubdate']
     metadata_tree.find("//DISS_description//DISS_dates//DISS_defense_date").text = request.form['defensedate']
+
+    print('dates done')
+
     # set degree
     metadata_tree.find("//DISS_description//DISS_degree//DISS_degree_abbreviation").text = request.form['degreename']
     metadata_tree.find("//DISS_description//DISS_degree//DISS_degree_name").text = formdata["dissertation"]["degreename"].get(request.form['degreename'])
@@ -81,6 +98,8 @@ def processdeposit(deposittype):
     # metadata_tree.find("//DISS_description//DISS_advisor//DISS_name//DISS_surname").text = "AdvisorL"
     # metadata_tree.find("//DISS_description//DISS_advisor//DISS_name//DISS_fname").text = "AdvisorF"
     # metadata_tree.find("//DISS_description//DISS_advisor//DISS_name//DISS_order").text = "1"
+
+    print('basic meta done')
 
     # set committee members
     cmtemembers = metadata_tree.findall(".//DISS_description//DISS_cmte_member")
@@ -137,11 +156,14 @@ def processdeposit(deposittype):
     # metadata_tree.find("//DISS_description//DISS_cmte_member//DISS_name//DISS_fname").text = "CmteF"
     # metadata_tree.find("//DISS_description//DISS_cmte_member//DISS_name//DISS_order").text = "1"
 
+    print('committee done')
+
     # set availability
     if request.form['availability'] == "open access":
-        metadata_tree.find("//DISS_repository//DISS_access_option").text = "Research:open"
+        metadata_tree.find("//DISS_repository//DISS_access_option").text = "9623461160002976"
+        # metadata_tree.find("//DISS_repository//DISS_access_option").text = "Research:open"
     else:
-        #metadata_tree.find("//DISS_repository//DISS_access_option").text = "9575220150002976"
+        # only date is needed, embargo is automatically set
         metadata_tree.find("//DISS_repository//DISS_delayed_release").text = request.form['availability']
     # set categories
     #metadata_tree.find("//DISS_description//DISS_categorization//DISS_category//DISS_cat_code").text = parameters.topics.get(request.form['topic'])
@@ -257,8 +279,8 @@ def index():
             if depositresult == 201:
                 return render_template("deposit_result.html", form=request.form, files=request.files)
             else:
-                return render_template('error.html')
-                #return depositresult
+                #return render_template('error.html')
+                return depositresult
         else:
             return render_template('error.html')
 
