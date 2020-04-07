@@ -141,8 +141,8 @@ def processdeposit(deposittype):
     if request.form['availability'] == "open access":
         metadata_tree.find("//DISS_repository//DISS_access_option").text = "Research:open"
     else:
-        metadata_tree.find("//DISS_repository//DISS_access_option").text = "9575220150002976"
-        #metadata_tree.find("//DISS_repository//DISS_delayed_release").text = request.form['availability']
+        #metadata_tree.find("//DISS_repository//DISS_access_option").text = "9575220150002976"
+        metadata_tree.find("//DISS_repository//DISS_delayed_release").text = request.form['availability']
     # set categories
     #metadata_tree.find("//DISS_description//DISS_categorization//DISS_category//DISS_cat_code").text = parameters.topics.get(request.form['topic'])
     #metadata_tree.find("//DISS_description//DISS_categorization//DISS_category//DISS_cat_desc").text = request.form['topic']
@@ -211,7 +211,7 @@ def processdeposit(deposittype):
         if file.filename != '':
             os.remove(file.filename)
     os.remove(zip_file)
-    #os.remove(xml_file)
+    os.remove(xml_file)
     os.remove(txt_file)
 
     return r.status_code
