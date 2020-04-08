@@ -14,7 +14,7 @@ import requests
 import xml.etree.ElementTree as etree
 from flask import Flask, render_template, request, send_file, session
 
-from .config_test import config
+from .config_local import config
 from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
@@ -39,13 +39,9 @@ def processdeposit(deposittype):
 
     print("current directory: " + os.getcwd())
     # Parent Directory path 
-    #home_path = '/home/site/wwwroot'
-    #home_path = "C:/users/eprieto/Desktop/Submission/"
-    #home_path = '/hello_app/'
-    home_path = '../'
-
-    #static_path = '/hello_app/hello_app/static/'
-    static_path = '../hello_app/static/'
+    # home_path = '/home/site/wwwroot'
+    home_path = config.get('fileserver_path')
+    # home_path = "C:/users/eprieto/Desktop/Submission/"
 
     # Output Directory 
     directory = 'output/'
@@ -53,10 +49,11 @@ def processdeposit(deposittype):
     # mode writable
     # mode = 0o222 PREVIOUS FOR AZURE
     mode = 0o775
-    
+
+    app_path = config.get('app_path')
+
     # Output Path 
     app.config['UPLOAD_FOLDER'] = os.path.join(home_path, directory) 
-    print (app.config['UPLOAD_FOLDER'])
 
     # Check whether the specified path is an existing directory or not  
     isdir = os.path.isdir(app.config['UPLOAD_FOLDER'])  
@@ -90,8 +87,7 @@ def processdeposit(deposittype):
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
     # load blank metadata tree
-    print(os.getcwd())
-    metadata_tree = etree.parse(static_path+'metadata_template.xml')
+    metadata_tree = etree.parse('/static/metadata_template.xml')
 
     # populate metadata fields
 
@@ -258,7 +254,7 @@ def processdeposit(deposittype):
     encodedzip = base64.b64encode(open(app.config['UPLOAD_FOLDER'] + zip_file, 'rb').read()).decode()
 
     # copy the deposit.txt file to app.config['UPLOAD_FOLDER']
-    shutil.copyfile(static_path+'deposit.txt', app.config['UPLOAD_FOLDER'] + txt_file)
+    shutil.copyfile('/hello_app/hello_app/static/deposit.txt', app.config['UPLOAD_FOLDER'] + txt_file)
     sword_call = open(app.config['UPLOAD_FOLDER'] + txt_file, 'r').read().format(encoding=encodedzip)
     open(app.config['UPLOAD_FOLDER'] + txt_file, 'w').write(sword_call)
 
@@ -287,13 +283,13 @@ def processdeposit(deposittype):
     clearsession()
 
     # delete the files
-    #os.remove(app.config['UPLOAD_FOLDER'] + '/' + request.files['primaryfile'].filename)
-    #for file in request.files.getlist("supplementalfiles"):
-    #    if file.filename != '':
-    #        os.remove(app.config['UPLOAD_FOLDER'] + '/' + file.filename)
-    # os.remove(app.config['UPLOAD_FOLDER'] + '/' + zip_file)
-    # os.remove(app.config['UPLOAD_FOLDER'] + '/' + xml_file)
-    # os.remove(app.config['UPLOAD_FOLDER'] + '/' + txt_file)
+    os.remove(app.config['UPLOAD_FOLDER'] + '/' + request.files['primaryfile'].filename)
+    for file in request.files.getlist("supplementalfiles"):
+       if file.filename != '':
+           os.remove(app.config['UPLOAD_FOLDER'] + '/' + file.filename)
+    os.remove(app.config['UPLOAD_FOLDER'] + '/' + zip_file)
+    os.remove(app.config['UPLOAD_FOLDER'] + '/' + xml_file)
+    os.remove(app.config['UPLOAD_FOLDER'] + '/' + txt_file)
 
     return r.status_code
     #return 201
