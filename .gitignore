@@ -10,6 +10,9 @@ config_prod.py
 config_test.py
 config_*.py
 
+# set scripts
+setup*.sh
+
 # log file
 deposits.log
 

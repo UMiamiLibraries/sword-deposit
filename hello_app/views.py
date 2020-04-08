@@ -14,7 +14,7 @@ import requests
 import xml.etree.ElementTree as etree
 from flask import Flask, render_template, request, send_file, session
 
-from .config_local import config
+from .config_local_docker import config
 from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
@@ -87,7 +87,7 @@ def processdeposit(deposittype):
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
     # load blank metadata tree
-    metadata_tree = etree.parse('/static/metadata_template.xml')
+    metadata_tree = etree.parse(app_path+'/static/metadata_template.xml')
 
     # populate metadata fields
 
@@ -254,7 +254,7 @@ def processdeposit(deposittype):
     encodedzip = base64.b64encode(open(app.config['UPLOAD_FOLDER'] + zip_file, 'rb').read()).decode()
 
     # copy the deposit.txt file to app.config['UPLOAD_FOLDER']
-    shutil.copyfile('/hello_app/hello_app/static/deposit.txt', app.config['UPLOAD_FOLDER'] + txt_file)
+    shutil.copyfile(app_path + 'static/deposit.txt', app.config['UPLOAD_FOLDER'] + txt_file)
     sword_call = open(app.config['UPLOAD_FOLDER'] + txt_file, 'r').read().format(encoding=encodedzip)
     open(app.config['UPLOAD_FOLDER'] + txt_file, 'w').write(sword_call)
 
