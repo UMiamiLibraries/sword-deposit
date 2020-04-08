@@ -4,9 +4,11 @@ import os
 import logging
 from datetime import date, timedelta
 from zipfile import ZipFile
+import smtplib
+from email.message import EmailMessage
 
 import requests
-from lxml import etree
+import xml.etree.ElementTree as etree
 from flask import Flask, render_template, request, send_file, session
 
 import config
@@ -91,7 +93,7 @@ def processdeposit(deposittype):
 
     # set degree
     metadata_tree.find("//DISS_description//DISS_degree//DISS_degree_abbreviation").text = request.form['degreename']
-    metadata_tree.find("//DISS_description//DISS_degree//DISS_degree_name").text = formdata["dissertation"]["degreename"].get(request.form['degreename'])
+    metadata_tree.find("//DISS_description//DISS_degree//DISS_degree_name").text = formdata[deposittype]["degreename"].get(request.form['degreename'])
     #set department
     metadata_tree.find("//DISS_description//DISS_inst_department").text = request.form['department']
     # set advisors
@@ -159,12 +161,12 @@ def processdeposit(deposittype):
     print('committee done')
 
     # set availability
-    if request.form['availability'] == "open access":
-        metadata_tree.find("//DISS_repository//DISS_access_option").text = "9623461160002976"
+    #if request.form['availability'] == "open access":
+    #    metadata_tree.find("//DISS_repository//DISS_access_option").text = "9623461160002976"
         # metadata_tree.find("//DISS_repository//DISS_access_option").text = "Research:open"
-    else:
+    #else:
         # only date is needed, embargo is automatically set
-        metadata_tree.find("//DISS_repository//DISS_delayed_release").text = request.form['availability']
+    metadata_tree.find("//DISS_repository//DISS_delayed_release").text = request.form['availability']
     # set categories
     #metadata_tree.find("//DISS_description//DISS_categorization//DISS_category//DISS_cat_code").text = parameters.topics.get(request.form['topic'])
     #metadata_tree.find("//DISS_description//DISS_categorization//DISS_category//DISS_cat_desc").text = request.form['topic']
@@ -192,7 +194,8 @@ def processdeposit(deposittype):
     txt_file = file_name + ".txt"
     zip_file = file_name + ".zip"
 
-    open(xml_file, 'wb').write(etree.tostring(metadata_tree, pretty_print=True))
+    metadata_tree = metadata_tree.getroot()
+    open(xml_file, 'wb').write(etree.tostring(metadata_tree,encoding='UTF-8'))
 
     # create the zip file and write uploaded files and metadata to it
     # contextlib.closing needed for python 2.6
@@ -228,13 +231,13 @@ def processdeposit(deposittype):
     clearsession()
 
     # delete the files
-    os.remove(request.files['primaryfile'].filename)
-    for file in request.files.getlist("supplementalfiles"):
-        if file.filename != '':
-            os.remove(file.filename)
-    os.remove(zip_file)
-    os.remove(xml_file)
-    os.remove(txt_file)
+    #os.remove(request.files['primaryfile'].filename)
+    #for file in request.files.getlist("supplementalfiles"):
+    #    if file.filename != '':
+    #        os.remove(file.filename)
+    #os.remove(zip_file)
+    #os.remove(xml_file)
+    #os.remove(txt_file)
 
     return r.status_code
     #return 201
@@ -245,6 +248,14 @@ def processdeposit(deposittype):
 @app.errorhandler(415)
 @app.errorhandler(500)
 def http_error_handler(error):
+    msg = EmailMessage()
+    msg.set_content('Dear UM SWORD admin,\n\nThere has been an error on the SWORD deposit server with the following message:\n\n%s\n\nkind regards\nfrom the server' % (error))
+    msg['Subject'] = 'SWORD error'
+    msg['From'] = 'tibben@ocf.berkeley.edu'
+    msg['To'] = 'tibben@huaylas.com'
+    s = smtplib.SMTP('localhost')
+    s.send_message(msg)
+    s.quit()
     return render_template('error.html')
 
 
@@ -253,7 +264,8 @@ def downloadagreement():
     try:
         return send_file(filename_or_fp='static/um_agreement.pdf')
     except Exception:
-        return render_template('error.html')
+        # return render_template('error.html')
+        return http_error_handler('send agreement pdf failed')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -273,16 +285,18 @@ def index():
             if session['deposittype']:
                 return render_template("deposit_form.html", formdata=formdata)
             else:
-                return render_template('error.html')
+                return http_error_handler('no deposit type selected')
+                #return render_template('error.html')
         if session['step'] == "depositform":
             depositresult = processdeposit(request.form['deposittype'])
             if depositresult == 201:
                 return render_template("deposit_result.html", form=request.form, files=request.files)
             else:
-                #return render_template('error.html')
-                return depositresult
+                # return render_template('error.html')
+                return http_error_handler(depositresult)
         else:
-            return render_template('error.html')
+            return http_error_handler('bad path')
+            # return render_template('error.html')
 
 
 if __name__ == '__main__':
