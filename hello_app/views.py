@@ -56,17 +56,12 @@ def processdeposit(deposittype):
 
     # Check whether the specified path is an existing directory or not  
     isdir = os.path.isdir(app.config['UPLOAD_FOLDER'])  
-
     if not isdir:
         try:
             original_umask = os.umask(0)
             os.makedirs(app.config['UPLOAD_FOLDER'], mode)
         finally:
             os.umask(original_umask)
-
-        # Create the directory 
-        # with mode 0o222 
-        # os.mkdir(app.config['UPLOAD_FOLDER'], mode) PREVIOUS
 
     # change into app.config['UPLOAD_FOLDER'] diretory - it is a temporary directory
     os.chdir(app.config['UPLOAD_FOLDER'])
@@ -80,15 +75,19 @@ def processdeposit(deposittype):
         file = request.files['primaryfile']
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        file.filename = filename
     for file in request.files.getlist("supplementalfiles"):
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file.filename = filename
 
     # load blank metadata tree
     metadata_tree = etree.parse(app_path+'/static/metadata_template.xml')
 
-    # populate metadata fields
+    ## 
+     # Populate metadata fields from form
+     ##
 
     # set type
     if deposittype == "dissertation":
@@ -209,9 +208,11 @@ def processdeposit(deposittype):
     else:
         # only date is needed, embargo is automatically set
         metadata_tree.find(".//DISS_repository//DISS_delayed_release").text = request.form['availability']
+
     # set categories
     #metadata_tree.find(".//DISS_description//DISS_categorization//DISS_category//DISS_cat_code").text = parameters.topics.get(request.form['topic'])
     #metadata_tree.find(".//DISS_description//DISS_categorization//DISS_category//DISS_cat_desc").text = request.form['topic']
+
     # set keywords
     keywords = metadata_tree.findall(".//DISS_description//DISS_categorization//DISS_keyword")
     for i, keyword in enumerate(request.form.getlist('keywords')):
@@ -226,16 +227,23 @@ def processdeposit(deposittype):
     metadata_tree.find(".//DISS_description//DISS_categorization//DISS_language").text = request.form['language']
     # set policy accepted
     metadata_tree.find(".//DISS_repository//DISS_agreement_decision_date").text = request.form['pubdate']
+
+    ##
+     # End of metadata capture from form
+     ##    
     
-    
-    # set file names
-    file_name = request.form['authorlname'] + "_" + request.form['authorfname'] + "_" + ''.join(
-        e for e in request.form['title'] if e.isalnum())
+    # set temporary file names
+    file_name = ''.join(
+        e for e in request.form['authorlname'] if e.isalnum()
+    ) + "_" + request.form['authorfname'] + "_" + ''.join(
+        e for e in request.form['title'] if e.isalnum()
+    )
     # the xml file MUST be called "metadata.xml"
     xml_file = "metadata.xml"
     txt_file = file_name + ".txt"
     zip_file = file_name + ".zip"
 
+    # write XML to temp file
     metadata_tree = metadata_tree.getroot()
     with open(app.config['UPLOAD_FOLDER'] + xml_file, 'w+') as fh:
         fh.write(etree.tostring(metadata_tree, encoding='unicode')) # , pretty_print=True (for lxml)
@@ -266,12 +274,12 @@ def processdeposit(deposittype):
 
     headers = {
         'Content-Type': 'multipart/related; boundary=---------------1605871705;  type="application/atom+xml"',
-        "On-behalf-of": config.get('deposit_obo')
+        "On-behalf-of": config.get('deposit_obo'),
     }
 
     data = open(app.config['UPLOAD_FOLDER'] + txt_file, 'rb').read()
     print("sending file")
-    r = requests.post(deposit_url, headers=headers, data=data)
+    r = requests.post(deposit_url, headers=headers, data=data, verify=False)
 
     #logging.info("---------------------")
     #logging.info('deposit made for ' + request.form['authorfname'] + request.form['authorlname'])

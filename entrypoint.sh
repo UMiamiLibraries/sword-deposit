@@ -1,7 +1,18 @@
-#! /usr/bin/env bash
+#! /usr/bin/env sh
 set -e
 
-/uwsgi-nginx-entrypoint.sh
+start_sshd(){
+echo "starting sshd"
+/usr/sbin/sshd -D
+}
+
+start_server(){
+  echo "running uwsgi-nginx-entrypoint.sh"
+  /uwsgi-nginx-entrypoint.sh
+
+# Explicitly add installed Python packages and uWSGI Python packages to PYTHONPATH
+# Otherwise uWSGI can't import Flask
+export PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.6/site-packages:/usr/lib/python3.6/site-packages
 
 # Get the URL for static files from the environment variable
 USE_STATIC_URL=${STATIC_URL:-'/static'}
@@ -35,5 +46,9 @@ else
     # Save generated server /etc/nginx/conf.d/nginx.conf
     printf "$content_server" > /etc/nginx/conf.d/nginx.conf
 fi
+echo "running supervisord"
+supervisord
+}
 
-exec "$@"
+start_server &
+start_sshd
