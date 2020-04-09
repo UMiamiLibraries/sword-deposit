@@ -12,7 +12,7 @@ import xml.etree.ElementTree as etree
 from flask import Flask, render_template, request, send_file, session
 
 # import application variables
-from .config_local import config
+from .config_local_docker import config
 from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
@@ -33,16 +33,14 @@ def clearsession():
 
 # process form data and make sword request to Esploro server
 def processdeposit(deposittype):
-
-    # mode writable
-    # mode = 0o222 PREVIOUS FOR AZURE
+    
     mode = 0o775
 
     # Set working directories 
-    home_path = config.get('fileserver_path')
+    fileserver_path = config.get('fileserver_path')
     app_path = config.get('app_path')
     directory = 'output/'
-    app.config['UPLOAD_FOLDER'] = os.path.join(home_path, directory) 
+    app.config['UPLOAD_FOLDER'] = os.path.join(fileserver_path, directory) 
 
     # Check whether the specified path is an existing directory or not  
     isdir = os.path.isdir(app.config['UPLOAD_FOLDER'])  
@@ -251,7 +249,7 @@ def processdeposit(deposittype):
     encodedzip = base64.b64encode(open(app.config['UPLOAD_FOLDER'] + zip_file, 'rb').read()).decode()
 
     # copy the deposit.txt file to app.config['UPLOAD_FOLDER']
-    shutil.copyfile(app_path + 'static/deposit.txt', app.config['UPLOAD_FOLDER'] + txt_file)
+    shutil.copyfile(app_path + '/static/deposit.txt', app.config['UPLOAD_FOLDER'] + txt_file)
     sword_call = open(app.config['UPLOAD_FOLDER'] + txt_file, 'r').read().format(encoding=encodedzip)
     open(app.config['UPLOAD_FOLDER'] + txt_file, 'w').write(sword_call)
 
