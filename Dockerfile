@@ -8,7 +8,7 @@ FROM tiangolo/uwsgi-nginx-flask:python3.6-alpine3.7
 # WEBSITES_PORT with a value that matches the port here (the Azure default is 80).
 # You can also create a setting through the App Service Extension in VS Code.
 ENV LISTEN_PORT=5000
-EXPOSE 5000 443 2222
+EXPOSE 5000 2222
 
 # Indicate where uwsgi.ini lives
 ENV UWSGI_INI uwsgi.ini
@@ -43,3 +43,6 @@ COPY docker/sshd_config /etc/ssh/
 COPY docker/init.sh /usr/local/bin/
 
 RUN chmod u+x /usr/local/bin/init.sh
+
+
+ENTRYPOINT ["/usr/local/bin/init.sh"]
