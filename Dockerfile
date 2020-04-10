@@ -48,6 +48,11 @@ RUN apk add openssh \
 
 COPY docker/sshd_config /etc/ssh/
 
+# ssl
+COPY docker/nginx.key /etc/ssl/private/nginx.key
+COPY docker/nginx.crt /etc/ssl/certs/nginx.crt
+COPY docker/nginx.conf.dist /etc/nginx/conf.d/nginx.conf.dist
+
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
