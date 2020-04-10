@@ -2,8 +2,8 @@
 set -e
 
 start_sshd(){
-echo "starting sshd"
-/usr/sbin/sshd -D
+  echo "starting sshd"
+  /usr/sbin/sshd -D
 }
 
 start_server(){
