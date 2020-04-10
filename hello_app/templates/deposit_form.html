@@ -11,7 +11,7 @@
 
     <h1>{{ formdata.deposittype.capitalize() }} Deposit Form</h1>
 
-    <form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data" class="please-validate" novalidate>
 
         <!-- TITLE -->
         <div class="card mb-3">
@@ -334,23 +334,23 @@
                     <!--<label class="custom-file-label" for="file">Upload Full Text</label>-->
                     <label for="primaryfile">Primary File:</label>
                     <input type="file" name="primaryfile" class="form-control-file" id="primaryfile"
-                           accept=".txt,
-                                   .jpeg,.png,image/png
-                                   .pdf,application/pdf,
-                                   .xml,application/xml
-                                   .doc,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
-                                   .xls,.xlsx,application/vnd.ms-excel"
+                           accept=".pdf,application/pdf,
+                                   .doc,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,"
                                     required>
                 </div>
                 <div class="form-group">
                     <label for="supplementalfiles">Supplemental Files:</label>
                     <input type="file" name="supplementalfiles" class="form-control-file" id="supplementalfiles"
-                           accept=".txt,
-                                   .jpeg,.png,image/png
-                                   .pdf,application/pdf,
-                                   .xml,application/xml
+                           accept=".txt,csv,json
+                                   .jpeg,image/jpg,
+                                   .tif,.tiff,image/tif,
+                                   .png,image/png,
+                                   .pdf,application/pdf
                                    .doc,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
-                                   .xls,.xlsx,application/vnd.ms-excel"
+                                   .xls,.xlsx,application/vnd.ms-excel,
+                                   .zip,
+                                   .mp3,.wav,
+                                   .avi,.mov,.wmv"
                                     multiple>
                 </div>
             </div>
@@ -361,4 +361,28 @@
 
     </form>
     <br>
+    <script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function() {
+      'use strict';
+      window.addEventListener('load', function() {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName('please-validate');
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+          form.addEventListener('submit', function(event) {
+            if (form.checkValidity() === false) {
+              event.preventDefault();
+              event.stopPropagation();
+              var errorElements = document.querySelectorAll("input.form-control:invalid");
+              $('html, body').animate({
+                scrollTop: $(errorElements[0]).offset().top
+              }, 2000);
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+      }, false);
+    })();
+    </script>
 {% endblock %}
