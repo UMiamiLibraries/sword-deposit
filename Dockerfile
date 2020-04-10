@@ -48,7 +48,7 @@ RUN apk add openssh \
 
 COPY docker/sshd_config /etc/ssh/
 
-COPY entrypoint.sh /entrypoint.sh
+COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
