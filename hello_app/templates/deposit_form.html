@@ -313,8 +313,8 @@
                     language other than English, please select it from the drop down. If the language does not appear
                     in the dropdown, please contact ___ to get pre-approval
                  </p>
-                <select class="form-control" id="language" name="language">
-                    <option value="EN" default required>English</option>
+                <select class="form-control" id="language" name="language" required>
+                    <option value="EN" default>English</option>
                     {% for language in formdata.languages %}
                         <option value="{{ language }}">{{ formdata.languages.get(language) }}</option>
                     {% endfor %}
@@ -327,8 +327,7 @@
             <div class="card-header">Upload Full Text <small class="text-muted">required</small></div>
             <div class="card-body">
                 <p class="card-text">
-                    Your primary file should be deposit in the first box. You may upload multiple suplemental files
-                    in the second box. Allowed formats are txt, pdf, docx. Maximum total upload limit is 16MB.
+                    Your primary file should be deposit in the first box Allowed primary formats are docx and pdf. You may upload multiple supplemental files in the second box. Allowed supplemental formats are txt, csv, pdf, docx, jpg, tif, png, xlsx, mp3, wav, avi, mov, and wmv. Maximum total upload limit is 16MB.
                 </p>
                 <div class="form-group">
                     <!--<label class="custom-file-label" for="file">Upload Full Text</label>-->
@@ -336,7 +335,8 @@
                     <input type="file" name="primaryfile" class="form-control-file" id="primaryfile"
                            accept=".pdf,application/pdf,
                                    .doc,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,"
-                                    required>
+                           required>
+                    <div class="invalid-feedback">Your must include a primary file</div> 
                 </div>
                 <div class="form-group">
                     <label for="supplementalfiles">Supplemental Files:</label>
@@ -351,7 +351,9 @@
                                    .zip,
                                    .mp3,.wav,
                                    .avi,.mov,.wmv"
-                                    multiple>
+                           multiple>
+                    <div class="supplemental-file-list" style ="margin-top: .5rem;"></div> 
+                    <div class="invalid-feedback">Your supplemental files include a duplicate of the primary file</div> 
                 </div>
             </div>
         </div>
@@ -362,26 +364,58 @@
     </form>
     <br>
     <script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    // Custom form validation - mostly for file name checking
     (function() {
       'use strict';
+      // check to make sure nothing in supplemental duplicates the primary file
+      var checkSupplemental = function() {
+        let supplemental = Object.keys($("#supplementalfiles")[0].files).reduce((c,k) => {
+          c.push($("#supplementalfiles")[0].files[k].name);
+          return c; 
+        },[]);
+        if (supplemental.length > 0 && $("#primaryfile")[0].files.length > 0)
+          if (supplemental.indexOf($("#primaryfile")[0].files[0].name) != -1) {
+            $("#supplementalfiles").next().next().addClass('d-block');
+            return false;
+          }
+        return true;
+      }
+      // 
       window.addEventListener('load', function() {
         // Fetch all the forms we want to apply custom Bootstrap validation styles to
         var forms = document.getElementsByClassName('please-validate');
         // Loop over them and prevent submission
         var validation = Array.prototype.filter.call(forms, function(form) {
           form.addEventListener('submit', function(event) {
-            if (form.checkValidity() === false) {
+            if (form.checkValidity() === false || checkSupplemental() === false) {
               event.preventDefault();
               event.stopPropagation();
               var errorElements = document.querySelectorAll("input.form-control:invalid");
-              $('html, body').animate({
-                scrollTop: $(errorElements[0]).offset().top
-              }, 2000);
+              if (errorElements.length > 0) {
+                $('html, body').animate({
+                  scrollTop: ($(errorElements[0]).offset().top - 20)
+                }, 2000);
+              }
             }
             form.classList.add('was-validated');
           }, false);
         });
+        // add custom validation and messages for the supplemental file picker
+        $("#supplementalfiles")[0].addEventListener('change', (function(e){
+          var files = [];
+          for (var i = 0; i < $(this)[0].files.length; i++) {
+              files.push($(this)[0].files[i].name);
+          }
+          if (files.length > 1) $(this).next().html(files.join('<br/>'));
+          else $(this).next().html('');
+          $(this).next().next().removeClass('d-block');
+          checkSupplemental();
+        }));
+        // on primary selection run the supplemental checker
+        $("#primaryfile")[0].addEventListener('change', (function(e){
+          $("#supplementalfiles").next().next().removeClass('d-block');
+          checkSupplemental();
+        }));
       }, false);
     })();
     </script>
