@@ -3,30 +3,50 @@
 
 	<div class="jumbotron">
 		<h1 class="display-4">Congratulations! You have just submitted your {% if form.deposittype == "dissertation" %} Dissertation {% else %} Thesis {% endif %}</h1>
+
 		<p>The Graduate School has been notified. You will be contacted within the next few days with any further action.
 			For your reference, below is a summary of your deposit:</p>
+
 		<ul class="list-unstyled">
 			<li><strong>Title:</strong> {{ form.title }}</li>
 			<li><strong>Author:</strong> {{ form.authorfname }} {% if form.authormname %} {{ form.authormname }} {% endif %}{{ form.authorlname }}</li>
 			<li><strong>Abstract:</strong> {{ form.abstract[:100] }}...</li>
-			{% if form.deposittype == 'masters' %}
+
+			{% if form.deposittype == 'dissertation' %}
 				<li><strong>Degree Type:</strong> {{ form.degreetype }}</li>
 			{% endif %}
+
 			<li><strong>Degree Awarded:</strong> {{ form.degreename }}</li>
+			<li><strong>Department:</strong> {{ form.department }}</li>
 			<li><strong>Submission date:</strong> {{ form.pubdate }}</li>
 			<li><strong>Defense Date:</strong> {{ form.defensedate }}</li>
 			<li><strong>Availability:</strong> {{ form.availability }}</li>
-			<li><strong>Department:</strong> {{ form.department }}</li>
+
 			<!-- need to add committee members -->
-			{% if form.keywords %}
-				<li>
-					<strong>Keywords:</strong> {% for keyword in form.getlist('keywords') %}{{ keyword }}, {% endfor %}
+
+			{% if form.getlist('keywords') %}
+				<li><strong>Keywords:</strong>
+						<ul class="list-unstyled">
+						{% for keyword in form.getlist('keywords') %}
+								<li>{{ keyword }}</li>
+						{% endfor %}
+						</ul>
 				</li>
 			{% endif %}
-				<li>
-					<strong>File(s):</strong> {{ files['primaryfile'].filename }} {% for file in files.getlist('supplementalfiles') %},{{ file.filename }} {% endfor %}
-				</li>
+
+			<li><strong>Primary File:</strong> {{ files['primaryfile'].filename }}</li>
+
+			{% if files.getlist('supplementalfiles') %}
+			<li><strong>Supplemental Files:</strong></li>
+				<ul class="list-unstyled">
+					{% for file in files.getlist('supplementalfiles') %}
+					{% if file %}<li>{{ file.filename }}</li>{% endif %}
+					{% endfor %}
+				</ul>
+			{% endif %}
+
 		</ul>
 	</div>
+	<div><a href="https://portal.scholarship.miami.edu/.auth/logout"><button class="btn btn-default">Logout</button></a></input></div>
 
 {% endblock %}
