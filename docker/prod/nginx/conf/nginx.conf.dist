@@ -11,6 +11,15 @@ server {
     ssl_certificate /etc/ssl/certs/portal-scholarship-crt.crt;
     ssl_certificate_key /etc/ssl/private/portal-scholarship-key.key;
 
+    proxy_connect_timeout       600;
+    proxy_send_timeout          600;
+    proxy_read_timeout          600;
+    send_timeout                600;
+
+    uwsgi_next_upstream_timeout 600;
+    uwsgi_read_timeout          600;
+    uwsgi_send_timeout          600;
+
     location / {
         proxy_pass http://localhost:5000/;
         try_files $uri @app;
