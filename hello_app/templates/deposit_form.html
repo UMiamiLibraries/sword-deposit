@@ -151,7 +151,7 @@
             <div class="card-header">Department <small class="text-muted">required</small></div>
             <div class="card-body">
                 <p class="card-text">
-                    Please select your department. If you do not see your department in the drop down list, contact the<a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20No%20Department%20">grad division</a>.
+                    Please select your department. If you do not see your department in the drop down list, contact the <a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20No%20Department%20">grad division</a>.
                 </p>
                 <div class="form-group">
                     <select class="form-control" name="department" required>
@@ -434,7 +434,7 @@
   <script>
   // make sure defense date date picker works for all browsers
   $( document ).ready(function() {
-    $('#defensedate').datepicker({ maxDate: 0 });
+    $('#defensedate').datepicker({ maxDate: 0, dateFormat: "yy-mm-dd" });
   });
   </script>
 {% endblock %}
