@@ -1,6 +1,9 @@
 # Pull a pre-built alpine docker image with nginx and python3 installed
 FROM tiangolo/uwsgi-nginx-flask:python3.6-alpine3.7
 
+# timezone
+ENV TZ="America/New_York"
+
 RUN apk update
 RUN apk upgrade
 RUN apk add bash
@@ -49,9 +52,9 @@ RUN apk add openssh \
 COPY docker/sshd_config /etc/ssh/
 
 # ssl
-COPY docker/nginx.key /etc/ssl/private/nginx.key
-COPY docker/nginx.crt /etc/ssl/certs/nginx.crt
-COPY docker/nginx.conf.dist /etc/nginx/conf.d/nginx.conf.dist
+COPY docker/staging/nginx/conf/devportal-scholarship-key.key /etc/ssl/private/devportal-scholarship-key.key
+COPY docker/staging/nginx/conf/devportal-scholarship-crt.crt /etc/ssl/certs/devportal-scholarship-crt.crt
+COPY docker/staging/nginx/conf/nginx.conf.dist /etc/nginx/conf.d/nginx.conf.dist
 
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
