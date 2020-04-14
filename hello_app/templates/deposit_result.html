@@ -2,9 +2,9 @@
 {% block content %}
 
 	<div class="jumbotron">
-		<h1 class="display-4">Congratulations! You have just submitted your {% if form.deposittype == "dissertation" %} Dissertation {% else %} Thesis {% endif %}</h1>
+		<h1 class="display-5">Congratulations! You have successfully submitted your {% if form.deposittype == "dissertation" %} Dissertation {% else %} Thesis {% endif %}</h1>
 		<p>The Graduate School has been notified. You will be contacted within the next few days with any further action.
-			For your reference, below is a summary of your deposit:</p>
+			For your reference, below is a summary of your submission:</p>
 		<ul class="list-unstyled">
 			<li><strong>Title:</strong> {{ form.title }}</li>
 			<li><strong>Author:</strong> {{ form.authorfname }} {% if form.authormname %} {{ form.authormname }} {% endif %}{{ form.authorlname }}</li>
