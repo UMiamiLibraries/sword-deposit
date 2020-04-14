@@ -1,26 +1,23 @@
 import base64
 import contextlib
 import os
-# import logging
 import shutil
 from datetime import date, timedelta
 from zipfile import ZipFile
 from werkzeug.utils import secure_filename
-# import smtplib
-# from email.message import EmailMessage
 from . import app
 
 import requests
 import xml.etree.ElementTree as etree
 from flask import Flask, render_template, request, send_file, session
 
-from .config_local import config
+# import application variables
+from .config_prod import config
 from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
-# logging.basicConfig(filename='deposits.log', level=logging.INFO)
 
-
+# generate dates for embardo in the form
 def getdates():
     today = date.today()
     dates = {'today': today,
@@ -29,30 +26,21 @@ def getdates():
              'eighteenmonths': today + timedelta(weeks=78)}
     return dates
 
-
+# end session 
 def clearsession():
     session.pop('deposittype', None)
     session.pop('step', None)
 
-
+# process form data and make sword request to Esploro server
 def processdeposit(deposittype):
-
-    print("current directory: " + os.getcwd())
-    # Parent Directory path 
-
-    fileserver_path = config.get('fileserver_path')
-
-    # Output Directory 
-    directory = 'output/'
     
-    # mode writable
-    # mode = 0o222 PREVIOUS FOR AZURE
     mode = 0o775
 
+    # Set working directories 
+    fileserver_path = config.get('fileserver_path')
     app_path = config.get('app_path')
-
-    # Output Path 
-    app.config['UPLOAD_FOLDER'] = os.path.join(fileserver_path, directory)
+    directory = 'output/'
+    app.config['UPLOAD_FOLDER'] = os.path.join(fileserver_path, directory) 
 
     # Check whether the specified path is an existing directory or not  
     isdir = os.path.isdir(app.config['UPLOAD_FOLDER'])  
@@ -66,11 +54,12 @@ def processdeposit(deposittype):
     # change into app.config['UPLOAD_FOLDER'] diretory - it is a temporary directory
     os.chdir(app.config['UPLOAD_FOLDER'])
 
+    # provide feedback
     print(request.form)
     print(request.files['primaryfile'].filename)
     print(request.files.getlist('supplementalfiles'))
 
-    #save files
+    # save files
     if request.files['primaryfile']:
         file = request.files['primaryfile']
         filename = secure_filename(file.filename)
@@ -83,7 +72,7 @@ def processdeposit(deposittype):
             file.filename = filename
 
     # load blank metadata tree
-    metadata_tree = etree.parse(app_path+'/static/metadata_template.xml')
+    metadata_tree = etree.parse(os.path.join(app_path,'static/metadata_template.xml'))
 
     ## 
      # Populate metadata fields from form
@@ -230,14 +219,13 @@ def processdeposit(deposittype):
 
     ##
      # End of metadata capture from form
+     #
+     # Begin request 
      ##    
     
-    # set temporary file names
-    file_name = ''.join(
-        e for e in request.form['authorlname'] if e.isalnum()
-    ) + "_" + request.form['authorfname'] + "_" + ''.join(
-        e for e in request.form['title'] if e.isalnum()
-    )
+    # set temporary file names using title and author
+    file_name = secure_filename(request.form['authorlname'] + '_' + request.form['title'])
+
     # the xml file MUST be called "metadata.xml"
     xml_file = "metadata.xml"
     txt_file = file_name + ".txt"
@@ -245,12 +233,12 @@ def processdeposit(deposittype):
 
     # write XML to temp file
     metadata_tree = metadata_tree.getroot()
-    with open(app.config['UPLOAD_FOLDER'] + xml_file, 'w+') as fh:
+    with open(os.path.join(app.config['UPLOAD_FOLDER'],xml_file), 'w+') as fh:
         fh.write(etree.tostring(metadata_tree, encoding='unicode')) # , pretty_print=True (for lxml)
 
     # create the zip file and write uploaded files and metadata to it
     # contextlib.closing needed for python 2.6
-    with contextlib.closing(ZipFile(app.config['UPLOAD_FOLDER'] + zip_file, "w")) as depositzip:
+    with contextlib.closing(ZipFile(os.path.join(app.config['UPLOAD_FOLDER'],zip_file), "w")) as depositzip:
         depositzip.write(xml_file)
         depositzip.write(request.files['primaryfile'].filename)
         for file in request.files.getlist("supplementalfiles"):
@@ -258,28 +246,30 @@ def processdeposit(deposittype):
                 depositzip.write(file.filename)
 
     # encode the zip file and create sword call file
-    encodedzip = base64.b64encode(open(app.config['UPLOAD_FOLDER'] + zip_file, 'rb').read()).decode()
+    encodedzip = base64.b64encode(open(os.path.join(app.config['UPLOAD_FOLDER'],zip_file), 'rb').read()).decode()
 
     # copy the deposit.txt file to app.config['UPLOAD_FOLDER']
-    shutil.copyfile(app_path + '/static/deposit.txt', app.config['UPLOAD_FOLDER'] + txt_file)
-    sword_call = open(app.config['UPLOAD_FOLDER'] + txt_file, 'r').read().format(encoding=encodedzip)
-    open(app.config['UPLOAD_FOLDER'] + txt_file, 'w').write(sword_call)
+    shutil.copyfile(os.path.join(app_path,'static/deposit.txt'), os.path.join(app.config['UPLOAD_FOLDER'],txt_file))
+    sword_call = open(os.path.join(app.config['UPLOAD_FOLDER'],txt_file), 'r').read().format(encoding=encodedzip)
+    open(os.path.join(app.config['UPLOAD_FOLDER'],txt_file), 'w').write(sword_call)
 
-    # set request variables and make call
+    # set request url and authentication
     deposit_url = config.get('deposit_url').format(
         username=config.get('deposit_username'), 
         password=config.get('deposit_password')
     )
     print (deposit_url)
 
+    # set the headers
     headers = {
         'Content-Type': 'multipart/related; boundary=---------------1605871705;  type="application/atom+xml"',
         "On-behalf-of": config.get('deposit_obo'),
     }
 
-    data = open(app.config['UPLOAD_FOLDER'] + txt_file, 'rb').read()
+    # get saved text blob and make the call
+    data = open(os.path.join(app.config['UPLOAD_FOLDER'],txt_file), 'rb').read()
     print("sending file")
-    r = requests.post(deposit_url, headers=headers, data=data, verify=False)
+    r = requests.post(deposit_url, headers=headers, data=data)
 
     #logging.info("---------------------")
     #logging.info('deposit made for ' + request.form['authorfname'] + request.form['authorlname'])
@@ -290,13 +280,13 @@ def processdeposit(deposittype):
     clearsession()
 
     # delete the files
-    os.remove(app.config['UPLOAD_FOLDER'] + '/' + request.files['primaryfile'].filename)
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'],request.files['primaryfile'].filename))
     for file in request.files.getlist("supplementalfiles"):
        if file.filename != '':
-           os.remove(app.config['UPLOAD_FOLDER'] + '/' + file.filename)
-    os.remove(app.config['UPLOAD_FOLDER'] + '/' + zip_file)
-    os.remove(app.config['UPLOAD_FOLDER'] + '/' + xml_file)
-    os.remove(app.config['UPLOAD_FOLDER'] + '/' + txt_file)
+           os.remove(os.path.join(app.config['UPLOAD_FOLDER'],file.filename))
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'],zip_file))
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'],xml_file))
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'],txt_file))
 
     return r.status_code
     #return 201
