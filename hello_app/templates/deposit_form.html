@@ -1,24 +1,29 @@
 {% extends "base.html" %}
+
+{% block header %}
+  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+
 {% block content %}
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item">1. Select deposit type</li>
+        <li class="breadcrumb-item">1. Select Submission Type</li>
         <li class="breadcrumb-item">2. Accept Agreement</li>
         <li class="breadcrumb-item active">3. Submit Form</li>
       </ol>
     </nav>
 
-    <h1>{{ formdata.deposittype.capitalize() }} Deposit Form</h1>
+    <h1>{{ formdata.deposittype.capitalize() }} Submission Form</h1>
 
-    <form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data" class="please-validate" novalidate>
 
         <!-- TITLE -->
         <div class="card mb-3">
             <div class="card-header">Title <small class="text-muted">required</small></div>
             <div class="card-body">
                 <p class="card-text">
-                    Do not use all caps. Please use initial caps, i.e., capitalize the first letter of each major word
+                    Enter the full title as it appears on the first page of the abstract. Do not use ALL CAPS. Please use Title Case, i.e., capitalize the first letter of each major word
                     and lower case minor words like “and,” “in,” “a,” etc. This is an example of a properly capitalized
                     title: "An Analysis of Clause Usage in Academic Texts Produced by African-American, Haitian, and
                     Hispanic Community College Students."
@@ -145,6 +150,9 @@
         <div class="card mb-3">
             <div class="card-header">Department <small class="text-muted">required</small></div>
             <div class="card-body">
+                <p class="card-text">
+                    Please select your department. If you do not see your department in the drop down list, contact the<a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20No%20Department%20">grad division</a>.
+                </p>
                 <div class="form-group">
                     <select class="form-control" name="department" required>
                         <option disabled selected value>Select a department</option>
@@ -171,25 +179,25 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">1st committee member</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="First name" name="firstcmtemember">
+                    <input type="text" class="form-control" placeholder="First name" name="firstcmtemember" required>
                     <input type="text" class="form-control" placeholder="Middle name" name="firstcmtemember">
-                    <input type="text" class="form-control" placeholder="Last name" name="firstcmtemember">
+                    <input type="text" class="form-control" placeholder="Last name" name="firstcmtemember" required>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">2nd committee member</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="First name" name="secondcmtemember">
+                    <input type="text" class="form-control" placeholder="First name" name="secondcmtemember" required>
                     <input type="text" class="form-control" placeholder="Middle name"name="secondcmtemember">
-                    <input type="text" class="form-control" placeholder="Last name"name="secondcmtemember">
+                    <input type="text" class="form-control" placeholder="Last name"name="secondcmtemember" required>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">3rd committee member</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="First name" name="thirdcmtemember">
+                    <input type="text" class="form-control" placeholder="First name" name="thirdcmtemember" required>
                     <input type="text" class="form-control" placeholder="Middle name"name="thirdcmtemember">
-                    <input type="text" class="form-control" placeholder="Last name"name="thirdcmtemember">
+                    <input type="text" class="form-control" placeholder="Last name"name="thirdcmtemember" required>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
@@ -275,7 +283,7 @@
                     work are. Use sentence case for keywords (i.e. capitalize the first word of each keyword phrase,
                     but not subsequent words). Spell out all acronyms. You are encouraged to use a controlled list
                     such as the
-                    <a href="http://id.loc.gov/authorities/subjects.html" target="_blank">Library of Congress Subject Headings</a>
+                    <a href="http://id.loc.gov/authorities/subjects.html" target="_blank">Library of Congress Subject Headings</a>.
                  </p>
                 <div class="form-row">
                     <div class="col-md-6 mb-3">
@@ -311,10 +319,10 @@
                 <p class="card-text">
                     If your ETD is in English, do not modify this selection. If you are approved to submit in a
                     language other than English, please select it from the drop down. If the language does not appear
-                    in the dropdown, please contact ___ to get pre-approval
+                    in the dropdown, please contact the <a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20Language">grad division</a> to get pre-approval.
                  </p>
-                <select class="form-control" id="language" name="language">
-                    <option value="EN" default required>English</option>
+                <select class="form-control" id="language" name="language" required>
+                    <option value="EN" default>English</option>
                     {% for language in formdata.languages %}
                         <option value="{{ language }}">{{ formdata.languages.get(language) }}</option>
                     {% endfor %}
@@ -327,38 +335,106 @@
             <div class="card-header">Upload Full Text <small class="text-muted">required</small></div>
             <div class="card-body">
                 <p class="card-text">
-                    Your primary file should be deposit in the first box. You may upload multiple suplemental files
-                    in the second box. Allowed formats are txt, pdf, docx. Maximum total upload limit is 16MB.
+                    Please attach your primary file. Allowed primary formats are docx and pdf. You may attach multiple supplemental files. Allowed supplemental formats are txt, csv, pdf, docx, jpg, tif, png, xlsx, mp3, wav, avi, mov, and wmv.<br><br>NOTE: Maximum total upload limit is 16MB for the primary file and 16MB additional for the combined supplemental material. If your primary file is over 16MB please submit this form with the title page of your document as the primary file and contact the <a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20Large%20Files">grad division</a>. If your supplemental material is over 16MB please submit this form with the primary file still attached and contact the <a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20Large%20Files">grad division</a>.
                 </p>
                 <div class="form-group">
                     <!--<label class="custom-file-label" for="file">Upload Full Text</label>-->
                     <label for="primaryfile">Primary File:</label>
                     <input type="file" name="primaryfile" class="form-control-file" id="primaryfile"
-                           accept=".txt,
-                                   .jpeg,.png,image/png
-                                   .pdf,application/pdf,
-                                   .xml,application/xml
-                                   .doc,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
-                                   .xls,.xlsx,application/vnd.ms-excel"
-                                    required>
+                           accept=".pdf,application/pdf,
+                                   .doc,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,"
+                           required>
+                    <div class="invalid-feedback">Your must include a primary file</div> 
                 </div>
                 <div class="form-group">
                     <label for="supplementalfiles">Supplemental Files:</label>
                     <input type="file" name="supplementalfiles" class="form-control-file" id="supplementalfiles"
-                           accept=".txt,
-                                   .jpeg,.png,image/png
-                                   .pdf,application/pdf,
-                                   .xml,application/xml
+                           accept=".txt,csv,json
+                                   .jpeg,image/jpg,
+                                   .tif,.tiff,image/tif,
+                                   .png,image/png,
+                                   .pdf,application/pdf
                                    .doc,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
-                                   .xls,.xlsx,application/vnd.ms-excel"
-                                    multiple>
+                                   .xls,.xlsx,application/vnd.ms-excel,
+                                   .zip,
+                                   .mp3,.wav,
+                                   .avi,.mov,.wmv"
+                           multiple>
+                    <div class="supplemental-file-list" style ="margin-top: .5rem;"></div> 
+                    <div class="invalid-feedback">Your supplemental files include a duplicate of the primary file</div> 
                 </div>
             </div>
         </div>
 
         <!-- SUBMIT BUTTON -->
-        <button type="submit" class="btn btn-default" name="deposittype" value="{{ formdata.deposittype }}">Submit Deposit</button>
+        <button type="submit" class="btn btn-default" name="deposittype" value="{{ formdata.deposittype }}">Submit</button>
 
     </form>
     <br>
+    <script>
+    // Custom form validation - mostly for file name checking
+    (function() {
+      'use strict';
+      // check to make sure nothing in supplemental duplicates the primary file
+      var checkSupplemental = function() {
+        let supplemental = Object.keys($("#supplementalfiles")[0].files).reduce((c,k) => {
+          c.push($("#supplementalfiles")[0].files[k].name);
+          return c; 
+        },[]);
+        if (supplemental.length > 0 && $("#primaryfile")[0].files.length > 0)
+          if (supplemental.indexOf($("#primaryfile")[0].files[0].name) != -1) {
+            $("#supplementalfiles").next().next().addClass('d-block');
+            return false;
+          }
+        return true;
+      }
+      // 
+      window.addEventListener('load', function() {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName('please-validate');
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+          form.addEventListener('submit', function(event) {
+            if (form.checkValidity() === false || checkSupplemental() === false) {
+              event.preventDefault();
+              event.stopPropagation();
+              var errorElements = document.querySelectorAll("input.form-control:invalid");
+              if (errorElements.length > 0) {
+                $('html, body').animate({
+                  scrollTop: ($(errorElements[0]).offset().top - 20)
+                }, 2000);
+              }
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+        // add custom validation and messages for the supplemental file picker
+        $("#supplementalfiles")[0].addEventListener('change', (function(e){
+          var files = [];
+          for (var i = 0; i < $(this)[0].files.length; i++) {
+              files.push($(this)[0].files[i].name);
+          }
+          if (files.length > 1) $(this).next().html(files.join('<br/>'));
+          else $(this).next().html('');
+          $(this).next().next().removeClass('d-block');
+          checkSupplemental();
+        }));
+        // on primary selection run the supplemental checker
+        $("#primaryfile")[0].addEventListener('change', (function(e){
+          $("#supplementalfiles").next().next().removeClass('d-block');
+          checkSupplemental();
+        }));
+      }, false);
+    })();
+    </script>
+{% endblock %}
+
+{% block footer %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script>
+  // make sure defense date date picker works for all browsers
+  $( document ).ready(function() {
+    $('#defensedate').datepicker({ maxDate: 0 });
+  });
+  </script>
 {% endblock %}
