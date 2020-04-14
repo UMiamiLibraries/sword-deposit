@@ -5,6 +5,7 @@ import shutil
 from datetime import date, timedelta
 from zipfile import ZipFile
 from werkzeug.utils import secure_filename
+from slackclient import SlackClient
 from . import app
 
 import requests
@@ -16,6 +17,10 @@ from .config_prod import config
 from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
+
+SLACK_TOKEN = config.get('slack_token', None)
+
+slack_client = SlackClient(SLACK_TOKEN)
 
 # generate dates for embardo in the form
 def getdates():
@@ -30,6 +35,7 @@ def getdates():
 def clearsession():
     session.pop('deposittype', None)
     session.pop('step', None)
+
 
 # process form data and make sword request to Esploro server
 def processdeposit(deposittype):
