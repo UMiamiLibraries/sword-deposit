@@ -1,15 +1,20 @@
 {% extends "base.html" %}
+
+{% block header %}
+  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+
 {% block content %}
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item">1. Select deposit type</li>
+        <li class="breadcrumb-item">1. Select Submission Type</li>
         <li class="breadcrumb-item">2. Accept Agreement</li>
         <li class="breadcrumb-item active">3. Submit Form</li>
       </ol>
     </nav>
 
-    <h1>{{ formdata.deposittype.capitalize() }} Deposit Form</h1>
+    <h1>{{ formdata.deposittype.capitalize() }} Submission Form</h1>
 
     <form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data" class="please-validate" novalidate>
 
@@ -18,7 +23,7 @@
             <div class="card-header">Title <small class="text-muted">required</small></div>
             <div class="card-body">
                 <p class="card-text">
-                    Do not use all caps. Please use initial caps, i.e., capitalize the first letter of each major word
+                    Enter the full title as it appears on the first page of the abstract. Do not use ALL CAPS. Please use Title Case, i.e., capitalize the first letter of each major word
                     and lower case minor words like “and,” “in,” “a,” etc. This is an example of a properly capitalized
                     title: "An Analysis of Clause Usage in Academic Texts Produced by African-American, Haitian, and
                     Hispanic Community College Students."
@@ -65,7 +70,7 @@
          <div class="card mb-3">
              <div class="card-header">Date of Defense <small class="text-muted">required</small></div>
             <div class="card-body">
-                <input id="defensedate" name="defensedate" class="form-control" type="date" max="{{ formdata.dates.today }}" required>
+                <input id="defensedate" name="defensedate" class="form-control" required>
             </div>
         </div>
 
@@ -145,6 +150,9 @@
         <div class="card mb-3">
             <div class="card-header">Department <small class="text-muted">required</small></div>
             <div class="card-body">
+                <p class="card-text">
+                    Please select your department. If you do not see your department in the drop down list, contact the<a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20No%20Department%20">grad division</a>.
+                </p>
                 <div class="form-group">
                     <select class="form-control" name="department" required>
                         <option disabled selected value>Select a department</option>
@@ -171,25 +179,25 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">1st committee member</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="First name" name="firstcmtemember">
+                    <input type="text" class="form-control" placeholder="First name" name="firstcmtemember" required>
                     <input type="text" class="form-control" placeholder="Middle name" name="firstcmtemember">
-                    <input type="text" class="form-control" placeholder="Last name" name="firstcmtemember">
+                    <input type="text" class="form-control" placeholder="Last name" name="firstcmtemember" required>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">2nd committee member</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="First name" name="secondcmtemember">
+                    <input type="text" class="form-control" placeholder="First name" name="secondcmtemember" required>
                     <input type="text" class="form-control" placeholder="Middle name"name="secondcmtemember">
-                    <input type="text" class="form-control" placeholder="Last name"name="secondcmtemember">
+                    <input type="text" class="form-control" placeholder="Last name"name="secondcmtemember" required>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">3rd committee member</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="First name" name="thirdcmtemember">
+                    <input type="text" class="form-control" placeholder="First name" name="thirdcmtemember" required>
                     <input type="text" class="form-control" placeholder="Middle name"name="thirdcmtemember">
-                    <input type="text" class="form-control" placeholder="Last name"name="thirdcmtemember">
+                    <input type="text" class="form-control" placeholder="Last name"name="thirdcmtemember" required>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
@@ -275,7 +283,7 @@
                     work are. Use sentence case for keywords (i.e. capitalize the first word of each keyword phrase,
                     but not subsequent words). Spell out all acronyms. You are encouraged to use a controlled list
                     such as the
-                    <a href="http://id.loc.gov/authorities/subjects.html" target="_blank">Library of Congress Subject Headings</a>
+                    <a href="http://id.loc.gov/authorities/subjects.html" target="_blank">Library of Congress Subject Headings</a>.
                  </p>
                 <div class="form-row">
                     <div class="col-md-6 mb-3">
@@ -311,7 +319,7 @@
                 <p class="card-text">
                     If your ETD is in English, do not modify this selection. If you are approved to submit in a
                     language other than English, please select it from the drop down. If the language does not appear
-                    in the dropdown, please contact ___ to get pre-approval
+                    in the dropdown, please contact the <a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20Language">grad division</a> to get pre-approval.
                  </p>
                 <select class="form-control" id="language" name="language" required>
                     <option value="EN" default>English</option>
@@ -327,7 +335,7 @@
             <div class="card-header">Upload Full Text <small class="text-muted">required</small></div>
             <div class="card-body">
                 <p class="card-text">
-                    Your primary file should be deposit in the first box Allowed primary formats are docx and pdf. You may upload multiple supplemental files in the second box. Allowed supplemental formats are txt, csv, pdf, docx, jpg, tif, png, xlsx, mp3, wav, avi, mov, and wmv. Maximum total upload limit is 16MB.
+                    Please attach your primary file. Allowed primary formats are docx and pdf. You may attach multiple supplemental files. Allowed supplemental formats are txt, csv, pdf, docx, jpg, tif, png, xlsx, mp3, wav, avi, mov, and wmv.<br><br>NOTE: Maximum total upload limit is 16MB for the primary file and 16MB additional for the combined supplemental material. If your primary file is over 16MB please submit this form with the title page of your document as the primary file and contact the <a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20Large%20Files">grad division</a>. If your supplemental material is over 16MB please submit this form with the primary file still attached and contact the <a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20Large%20Files">grad division</a>.
                 </p>
                 <div class="form-group">
                     <!--<label class="custom-file-label" for="file">Upload Full Text</label>-->
@@ -359,7 +367,7 @@
         </div>
 
         <!-- SUBMIT BUTTON -->
-        <button type="submit" class="btn btn-default" name="deposittype" value="{{ formdata.deposittype }}">Submit Deposit</button>
+        <button type="submit" class="btn btn-default" name="deposittype" value="{{ formdata.deposittype }}">Submit</button>
 
     </form>
     <br>
@@ -419,4 +427,14 @@
       }, false);
     })();
     </script>
+{% endblock %}
+
+{% block footer %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script>
+  // make sure defense date date picker works for all browsers
+  $( document ).ready(function() {
+    $('#defensedate').datepicker({ maxDate: 0 });
+  });
+  </script>
 {% endblock %}

@@ -2,10 +2,12 @@
 {% block content %}
 
 	<div class="jumbotron">
-		<h3 class="display-5">Internal Server Error</h1>
+		<h3 class="display-5">Internal Server Error</h3>
 		<p>We are sorry to report that there is a problem with the server right now. The server administrator has already been notified of this error.</p>
-    <p>We suggest you try again later or contact *someone* to complete your deposit.</p>
-		<p>Click <a href="{{ url_for('index') }}">here</a> to try again.</p>
+		<p>If your file is larger than 16MB or need additional assistance depositing your ETD, please contact
+			<a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20Error" target="_blank">the Graduate School</a>.
+		</p>
+		<p>We suggest you try again later to complete your deposit by clicking <a href="{{ url_for('index') }}">here</a>.</p>
 	</div>
 
 {% endblock %}
