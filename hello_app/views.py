@@ -12,7 +12,7 @@ import xml.etree.ElementTree as etree
 from flask import Flask, render_template, request, send_file, session
 
 # import application variables
-from .config_local_docker import config
+from .config_prod import config
 from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
