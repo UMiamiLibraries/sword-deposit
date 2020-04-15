@@ -17,7 +17,7 @@ from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
 
-# generate dates for embardo in the form
+# generate dates for embargo in the form
 def getdates():
     today = date.today()
     dates = {'today': today,

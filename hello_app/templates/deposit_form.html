@@ -404,6 +404,11 @@
                   scrollTop: ($(errorElements[0]).offset().top - 20)
                 }, 2000);
               }
+            } else {
+                /* form submitted successfully, do something to block further user input */
+                $("#inprogress").toggle();
+                //$("#inprogress").attr('style','display:block;');
+                var x = 0;
             }
             form.classList.add('was-validated');
           }, false);
@@ -432,9 +437,11 @@
 {% block footer %}
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <script>
-  // make sure defense date date picker works for all browsers
-  $( document ).ready(function() {
-    $('#defensedate').datepicker({ maxDate: 0, dateFormat: "yy-mm-dd" });
-  });
+      // make sure defense date date picker works for all browsers
+      $( document ).ready(function() {
+        $('#defensedate').datepicker({ maxDate: 0, dateFormat: "yy-mm-dd" });
+      });
+      // add the inprogress div
+      $("body").append('<div style="background-color: rgba(255,255,255,0.7); position: absolute; top: 0px; left: 0px; height: '+$(document).height()+'px; Width: 100%; z-index: 100; display: none;" name="inprogress" id="inprogress"><center><img src="../static/loader.gif" style="position: fixed; bottom: 50%; margin-left: -40px;"></center></div>');
   </script>
 {% endblock %}
