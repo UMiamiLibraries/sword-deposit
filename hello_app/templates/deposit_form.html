@@ -330,22 +330,32 @@
             </div>
         </div>
 
-        <!-- FILEs -->
+        <!-- PRIMARY FILEs -->
         <div class="card mb-3">
-            <div class="card-header">Upload Full Text <small class="text-muted">required</small></div>
+            <div class="card-header">Upload Primary Full Text <small class="text-muted">required</small></div>
             <div class="card-body">
                 <p class="card-text">
-                    Please attach your primary file. Allowed primary formats are docx and pdf. You may attach multiple supplemental files. Allowed supplemental formats are txt, csv, pdf, docx, jpg, tif, png, xlsx, mp3, wav, avi, mov, and wmv.<br><br>NOTE: Maximum total upload limit is 16MB for the primary file and 16MB additional for the combined supplemental material. If your primary file is over 16MB please submit this form with the title page of your document as the primary file and contact the <a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20Large%20Files">grad division</a>. If your supplemental material is over 16MB please submit this form with the primary file still attached and contact the <a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20Large%20Files">grad division</a>.
+                    Please attach your primary full text file. The only allowed primary format is pdf.<br><br>NOTE: Maximum total upload limit is 16MB for the primary file. If your primary file is over 16MB please contact the <a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20Large%20Files">grad division</a> and then submit this form with the title page of your document as the primary file.
                 </p>
                 <div class="form-group">
                     <!--<label class="custom-file-label" for="file">Upload Full Text</label>-->
                     <label for="primaryfile">Primary File:</label>
                     <input type="file" name="primaryfile" class="form-control-file" id="primaryfile"
-                           accept=".pdf,application/pdf,
-                                   .doc,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,"
+                           accept=".pdf,application/pdf"
                            required>
-                    <div class="invalid-feedback">Your must include a primary file</div> 
+                    <div class="invalid-feedback">You must include a primary file</div> 
+                    <div class="invalid-feedback">Your primary file is over 16MB</div> 
                 </div>
+            </div>
+        </div>
+
+        <!-- SUPPLEMENTAL FILEs -->
+        <div class="card mb-3">
+            <div class="card-header">Upload Supplemental Files <small class="text-muted"></small></div>
+            <div class="card-body">
+                <p class="card-text">
+                    Allowed supplemental formats are txt, csv, pdf, docx, jpg, tif, png, xlsx, mp3, wav, avi, mov, and wmv.<br><br>NOTE: Maximum total upload limit is 12MB for the combined supplemental material. If your supplemental material is over 12MB please contact the <a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20Large%20Files">grad division</a> and then submit this form with the primary file still attached. 
+                </p>
                 <div class="form-group">
                     <label for="supplementalfiles">Supplemental Files:</label>
                     <input type="file" name="supplementalfiles" class="form-control-file" id="supplementalfiles"
@@ -362,6 +372,7 @@
                            multiple>
                     <div class="supplemental-file-list" style ="margin-top: .5rem;"></div> 
                     <div class="invalid-feedback">Your supplemental files include a duplicate of the primary file</div> 
+                    <div class="invalid-feedback">The total size of your supplemental material is over 12 MB</div> 
                 </div>
             </div>
         </div>
@@ -381,11 +392,24 @@
           c.push($("#supplementalfiles")[0].files[k].name);
           return c; 
         },[]);
-        if (supplemental.length > 0 && $("#primaryfile")[0].files.length > 0)
+        let suppsize = Object.keys($("#supplementalfiles")[0].files).reduce((c,k) => {
+          c = c + $("#supplementalfiles")[0].files[k].size;
+          return c; 
+        },0);
+        if (suppsize > 12000000) {
+          $("#supplementalfiles").next().next().next().addClass('d-block');
+          return false;
+        }
+        if ($("#primaryfile")[0].files[0].size > 16000000) {
+          $("#primaryfile").next().next().addClass('d-block');
+          return false;
+        }
+        if (supplemental.length > 0 && $("#primaryfile")[0].files.length > 0) {
           if (supplemental.indexOf($("#primaryfile")[0].files[0].name) != -1) {
             $("#supplementalfiles").next().next().addClass('d-block');
             return false;
           }
+        }
         return true;
       }
       // 
@@ -422,11 +446,14 @@
           if (files.length > 1) $(this).next().html(files.join('<br/>'));
           else $(this).next().html('');
           $(this).next().next().removeClass('d-block');
+          $(this).next().next().next().removeClass('d-block');
           checkSupplemental();
         }));
         // on primary selection run the supplemental checker
         $("#primaryfile")[0].addEventListener('change', (function(e){
           $("#supplementalfiles").next().next().removeClass('d-block');
+          $("#supplementalfiles").next().next().next().removeClass('d-block');
+          $("#primaryfile").next().next().removeClass('d-block');
           checkSupplemental();
         }));
       }, false);
