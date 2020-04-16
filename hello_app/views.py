@@ -5,6 +5,7 @@ import shutil
 from datetime import date, timedelta
 from zipfile import ZipFile
 from werkzeug.utils import secure_filename
+from slack_webhook import Slack
 from . import app
 
 import requests
@@ -30,6 +31,12 @@ def getdates():
 def clearsession():
     session.pop('deposittype', None)
     session.pop('step', None)
+
+
+def slackmsg(msg):
+    slack = Slack(url='https://hooks.slack.com/services/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')
+    slack.post(text=msg)
+
 
 # process form data and make sword request to Esploro server
 def processdeposit(deposittype):
@@ -341,9 +348,11 @@ def index():
         if session['step'] == "depositform":
             depositresult = processdeposit(request.form['deposittype'])
             if depositresult == 201:
+                slackmsg("New submission https://portal.scholarship.miami.edu")
                 return render_template("deposit_result.html", form=request.form, files=request.files)
             else:
                 # return render_template('error.html')
+                slackmsg(depositresult)
                 return http_error_handler(depositresult)
         else:
             return http_error_handler('bad path')
