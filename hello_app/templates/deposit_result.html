@@ -2,9 +2,10 @@
 {% block content %}
 
 	<div class="jumbotron">
-		<h1 class="display-4">Congratulations! You have just submitted your {% if form.deposittype == "dissertation" %} Dissertation {% else %} Thesis {% endif %}</h1>
+		<div style="float:right"><a href="https://portal.scholarship.miami.edu/.auth/logout?post_logout_redirect_uri=https%3A%2F%2Fwww.library.miami.edu%2F"><button class="btn btn-default">Logout</button></a></input></div>
+		<h1 class="display-5">Congratulations! You have successfully submitted your {% if form.deposittype == "dissertation" %}Dissertation{% else %}Thesis{% endif %}.</h1>
 
-		<p>The Graduate School has been notified. You will be contacted within the next few days with any further action.
+		<p>The Graduate School has been notified. If you have any questions or need to contact the graduate school please send an email to <a href="mailto:grad.dissertation@miami.edu?cc=j.cohen4@miami.edu&Subject=ETD%20Submission%20Question">grad.dissertation@miami.edu</a>.<br><br>
 			For your reference, below is a summary of your deposit:</p>
 		<ul class="list-unstyled">
 			<li><strong>Title:</strong> {{ form.title }}</li>
@@ -46,6 +47,5 @@
 
 		</ul>
 	</div>
-	<div><a href="https://portal.scholarship.miami.edu/.auth/logout?post_logout_redirect_uri=https%3A%2F%2Fwww.library.miami.edu%2F"><button class="btn btn-default">Logout</button></a></input></div>
 
 {% endblock %}

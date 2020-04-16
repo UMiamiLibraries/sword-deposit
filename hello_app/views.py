@@ -5,7 +5,7 @@ import shutil
 from datetime import date, timedelta
 from zipfile import ZipFile
 from werkzeug.utils import secure_filename
-from slackclient import SlackClient
+from slack_webhook import Slack
 from . import app
 
 import requests
@@ -18,11 +18,7 @@ from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
 
-SLACK_TOKEN = config.get('slack_token', None)
-
-slack_client = SlackClient(SLACK_TOKEN)
-
-# generate dates for embardo in the form
+# generate dates for embargo in the form
 def getdates():
     today = date.today()
     dates = {'today': today,
@@ -35,6 +31,12 @@ def getdates():
 def clearsession():
     session.pop('deposittype', None)
     session.pop('step', None)
+
+
+def slackmsg(msg):
+    webhook = config.get('slack_webhook')
+    slack = Slack(url=webhook)
+    slack.post(text=msg)
 
 
 # process form data and make sword request to Esploro server
@@ -302,6 +304,8 @@ def processdeposit(deposittype):
 @app.errorhandler(404)
 @app.errorhandler(415)
 @app.errorhandler(500)
+@app.errorhandler(502)
+@app.errorhandler(504)
 def http_error_handler(error):
     #msg = EmailMessage()
     #msg.set_content('Dear UM SWORD admin,\n\nThere has been an error on the SWORD deposit server with the following message:\n\n%s\n\nkind regards\nfrom the server' % (error))
@@ -345,9 +349,11 @@ def index():
         if session['step'] == "depositform":
             depositresult = processdeposit(request.form['deposittype'])
             if depositresult == 201:
+                slackmsg("New submission to https://miami.alma.exlibrisgroup.com/mng/action/home.do?mode=ajax from  https://portal.scholarship.miami.edu")
                 return render_template("deposit_result.html", form=request.form, files=request.files)
             else:
                 # return render_template('error.html')
+                slackmsg(depositresult)
                 return http_error_handler(depositresult)
         else:
             return http_error_handler('bad path')
