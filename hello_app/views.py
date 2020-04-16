@@ -13,7 +13,7 @@ import xml.etree.ElementTree as etree
 from flask import Flask, render_template, request, send_file, session
 
 # import application variables
-from .config_staging import config
+from .config_prod import config
 from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
@@ -349,7 +349,7 @@ def index():
         if session['step'] == "depositform":
             depositresult = processdeposit(request.form['deposittype'])
             if depositresult == 201:
-                slackmsg("New submission https://portal.scholarship.miami.edu")
+                slackmsg("New submission to https://miami.alma.exlibrisgroup.com/mng/action/home.do?mode=ajax from  https://portal.scholarship.miami.edu")
                 return render_template("deposit_result.html", form=request.form, files=request.files)
             else:
                 # return render_template('error.html')
