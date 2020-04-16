@@ -34,7 +34,8 @@ def clearsession():
 
 
 def slackmsg(msg):
-    slack = Slack(url='https://hooks.slack.com/services/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')
+    webhook = config.get('slack_webhook')
+    slack = Slack(url=webhook)
     slack.post(text=msg)
 
 
