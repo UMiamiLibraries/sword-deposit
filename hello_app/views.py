@@ -12,12 +12,12 @@ import xml.etree.ElementTree as etree
 from flask import Flask, render_template, request, send_file, session
 
 # import application variables
-from .config_prod import config
+from .config_staging import config
 from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
 
-# generate dates for embardo in the form
+# generate dates for embargo in the form
 def getdates():
     today = date.today()
     dates = {'today': today,
@@ -296,6 +296,8 @@ def processdeposit(deposittype):
 @app.errorhandler(404)
 @app.errorhandler(415)
 @app.errorhandler(500)
+@app.errorhandler(502)
+@app.errorhandler(504)
 def http_error_handler(error):
     #msg = EmailMessage()
     #msg.set_content('Dear UM SWORD admin,\n\nThere has been an error on the SWORD deposit server with the following message:\n\n%s\n\nkind regards\nfrom the server' % (error))
