@@ -151,7 +151,7 @@
             <div class="card-header">Department <small class="text-muted">required</small></div>
             <div class="card-body">
                 <p class="card-text">
-                    Please select your department. If you do not see your department in the drop down list, please contact the Graduate School (grad.dissertation@miami.edu) and copy the Repository Manager (jcohen4@miami.edu).
+                    Please select your department. If you do not see your department in the drop down list, please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('jason_email') }}).
                 </p>
                 <div class="form-group">
                     <select class="form-control" name="department" required>
@@ -319,7 +319,7 @@
                 <p class="card-text">
                     If your ETD is in English, do not modify this selection. If you are approved to submit in a
                     language other than English, please select it from the drop down. If the language does not appear
-                    in the dropdown, please contact the Graduate School (grad.dissertation@miami.edu) and copy the Repository Manager (jcohen4@miami.edu) to get pre-approval.
+                    in the dropdown, please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('jason_email') }}) to get pre-approval.
                  </p>
                 <select class="form-control" id="language" name="language" required>
                     <option value="EN" default>English</option>
@@ -335,7 +335,7 @@
             <div class="card-header">Upload Primary Full Text <small class="text-muted">required</small></div>
             <div class="card-body">
                 <p class="card-text">
-                    Please attach your primary full text file. The only allowed primary format is pdf.<br><br>NOTE: Maximum total upload limit is 16MB for the primary file. If your primary file is over 16MB please contact the Graduate School (grad.dissertation@miami.edu) and copy the Repository Manager (jcohen4@miami.edu) and then submit this form with the title page of your document as the primary file.
+                    Please attach your primary full text file. The only allowed primary format is pdf.<br><br>NOTE: Maximum total upload limit is 16MB for the primary file. If your primary file is over 16MB please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('jason_email') }}) and then submit this form with the title page of your document as the primary file.
                 </p>
                 <div class="form-group">
                     <!--<label class="custom-file-label" for="file">Upload Full Text</label>-->
@@ -354,7 +354,7 @@
             <div class="card-header">Upload Supplemental Files <small class="text-muted"></small></div>
             <div class="card-body">
                 <p class="card-text">
-                    Allowed supplemental formats are txt, csv, pdf, docx, jpg, tif, png, xlsx, mp3, wav, avi, mov, and wmv.<br><br>NOTE: Maximum total upload limit is 12MB for the combined supplemental material. If your supplemental material is over 12MB please contact the Graduate School (grad.dissertation@miami.edu) and copy the Repository Manager (jcohen4@miami.edu) and then submit this form with the primary file still attached. 
+                    Allowed supplemental formats are txt, csv, pdf, docx, jpg, tif, png, xlsx, mp3, wav, avi, mov, and wmv.<br><br>NOTE: Maximum total upload limit is 12MB for the combined supplemental material. If your supplemental material is over 12MB please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('jason_email') }}) and then submit this form with the primary file still attached.
                 </p>
                 <div class="form-group">
                     <label for="supplementalfiles">Supplemental Files:</label>
