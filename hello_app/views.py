@@ -118,7 +118,8 @@ def processdeposit(deposittype):
     # set project type
     if deposittype == "dissertation":
         metadata_tree.find(".//DISS_description//DISS_project_type").text = request.form['degreetype']
-
+    elif deposittype == "masters":
+        metadata_tree.find(".//DISS_description//DISS_project_type").text = 'thesis'
     print('type done')
 
     # set dates
