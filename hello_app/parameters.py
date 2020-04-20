@@ -129,5 +129,7 @@ formdata = {
             'Theater': '0465',
             'Theater history': '0644'
         }
-    }
+    },
+    'grad_email': 'grad.dissertation@miami.edu',
+    'jason_email': 'j.cohen4@miami.edu'
 }
