@@ -12,7 +12,7 @@ import xml.etree.ElementTree as etree
 from flask import Flask, render_template, request, send_file, session
 
 # import application variables
-from .config_staging import config
+from .config_local import config
 from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
@@ -110,7 +110,8 @@ def processdeposit(deposittype):
     # set project type
     if deposittype == "dissertation":
         metadata_tree.find(".//DISS_description//DISS_project_type").text = request.form['degreetype']
-
+    elif deposittype == "masters":
+        metadata_tree.find(".//DISS_description//DISS_project_type").text = 'thesis'
     print('type done')
 
     # set dates
