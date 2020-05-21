@@ -52,8 +52,6 @@ RUN apk add openssh \
 COPY docker/sshd_config /etc/ssh/
 
 # ssl
-COPY docker/prod/nginx/conf/portal-scholarship-key.key /etc/ssl/private/portal-scholarship-key.key
-COPY docker/prod/nginx/conf/portal-scholarship-crt.crt /etc/ssl/certs/portal-scholarship-crt.crt
 COPY docker/prod/nginx/conf/nginx.conf.dist /etc/nginx/conf.d/nginx.conf.dist
 
 COPY docker/entrypoint.sh /entrypoint.sh
