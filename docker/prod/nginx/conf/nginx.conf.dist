@@ -23,7 +23,7 @@ server {
         uwsgi_pass unix:///tmp/uwsgi.sock;
         uwsgi_read_timeout 600;
     }
-    location /hello_app/static {
+    location /web_app/static {
         alias /app/static;
     }
 }

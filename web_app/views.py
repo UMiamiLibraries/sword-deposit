@@ -32,12 +32,11 @@ def clearsession():
     session.pop('deposittype', None)
     session.pop('step', None)
 
-
+# send notification to slack
 def slackmsg(msg):
     webhook = config.get('slack_webhook')
     slack = Slack(url=webhook)
     slack.post(text=msg)
-
 
 # process form data and make sword request to Esploro server
 def processdeposit(deposittype):
@@ -301,6 +300,9 @@ def processdeposit(deposittype):
     #return 201
 
 
+##
+ # render all errors the same way
+ ##
 @app.errorhandler(400)
 @app.errorhandler(404)
 @app.errorhandler(415)
@@ -308,26 +310,21 @@ def processdeposit(deposittype):
 @app.errorhandler(502)
 @app.errorhandler(504)
 def http_error_handler(error):
-    #msg = EmailMessage()
-    #msg.set_content('Dear UM SWORD admin,\n\nThere has been an error on the SWORD deposit server with the following message:\n\n%s\n\nkind regards\nfrom the server' % (error))
-    #msg['Subject'] = 'SWORD error'
-    #msg['From'] = 'tibben@ocf.berkeley.edu'
-    #msg['To'] = 'tibben@huaylas.com'
-    #s = smtplib.SMTP('localhost')
-    #s.send_message(msg)
-    #s.quit()
-    print(error)
     return render_template('error.html')
 
-
+##
+ # render agreement form
+ ##
 @app.route("/um-agreement-pdf/", methods=['GET'])
 def downloadagreement():
     try:
         return send_file(filename_or_fp='static/um_agreement.pdf')
     except Exception:
-        # return render_template('error.html')
         return http_error_handler('send agreement pdf failed')
 
+##
+ # handle all app routes
+ ##
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == "GET":
