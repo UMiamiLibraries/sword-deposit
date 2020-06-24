@@ -13,7 +13,7 @@ import xml.etree.ElementTree as etree
 from flask import Flask, render_template, request, send_file, session
 
 # import application variables
-from .config_prod import config
+from .config_local import config
 from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
@@ -238,7 +238,7 @@ def processdeposit(deposittype):
     # the xml file MUST be called "metadata.xml"
     xml_file = "metadata.xml"
     txt_file = file_name + ".txt"
-    zip_file = file_name + ".zip"
+    zip_file = request.form['authorfname'] + request.form['authorlname'] + ".zip"
 
     # write XML to temp file
     metadata_tree = metadata_tree.getroot()
@@ -297,6 +297,7 @@ def processdeposit(deposittype):
     os.remove(os.path.join(app.config['UPLOAD_FOLDER'],xml_file))
     os.remove(os.path.join(app.config['UPLOAD_FOLDER'],txt_file))
 
+    print("submission status: " + str(r.status_code))
     return r.status_code
     #return 201
 
@@ -327,6 +328,7 @@ def downloadagreement():
     except Exception:
         # return render_template('error.html')
         return http_error_handler('send agreement pdf failed')
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
