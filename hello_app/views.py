@@ -330,6 +330,11 @@ def downloadagreement():
         return http_error_handler('send agreement pdf failed')
 
 
+@app.route("/test", methods=['GET'])
+def test():
+    return render_template("test.html")
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == "GET":
