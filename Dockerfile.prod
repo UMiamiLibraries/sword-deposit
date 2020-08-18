@@ -1,6 +1,9 @@
 # Pull a pre-built alpine docker image with nginx and python3 installed
 FROM tiangolo/uwsgi-nginx-flask:python3.6-alpine3.7
 
+# timezone
+ENV TZ="America/New_York"
+
 RUN apk update
 RUN apk upgrade
 RUN apk add bash
@@ -47,6 +50,9 @@ RUN apk add openssh \
      && echo "root:Docker!" | chpasswd
 
 COPY docker/sshd_config /etc/ssh/
+
+# ssl
+COPY docker/prod/nginx/conf/nginx.conf.dist /etc/nginx/conf.d/nginx.conf.dist
 
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

@@ -5,6 +5,7 @@ import shutil
 from datetime import date, timedelta
 from zipfile import ZipFile
 from werkzeug.utils import secure_filename
+from slack_webhook import Slack
 from . import app
 
 import requests
@@ -12,12 +13,12 @@ import xml.etree.ElementTree as etree
 from flask import Flask, render_template, request, send_file, session
 
 # import application variables
-from .config_local_docker import config
+from .config_prod import config
 from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
 
-# generate dates for embardo in the form
+# generate dates for embargo in the form
 def getdates():
     today = date.today()
     dates = {'today': today,
@@ -30,6 +31,13 @@ def getdates():
 def clearsession():
     session.pop('deposittype', None)
     session.pop('step', None)
+
+
+def slackmsg(msg):
+    webhook = config.get('slack_webhook')
+    slack = Slack(url=webhook)
+    slack.post(text=msg)
+
 
 # process form data and make sword request to Esploro server
 def processdeposit(deposittype):
@@ -72,7 +80,7 @@ def processdeposit(deposittype):
             file.filename = filename
 
     # load blank metadata tree
-    metadata_tree = etree.parse(app_path+'/static/metadata_template.xml')
+    metadata_tree = etree.parse(os.path.join(app_path,'static/metadata_template.xml'))
 
     ## 
      # Populate metadata fields from form
@@ -110,7 +118,8 @@ def processdeposit(deposittype):
     # set project type
     if deposittype == "dissertation":
         metadata_tree.find(".//DISS_description//DISS_project_type").text = request.form['degreetype']
-
+    elif deposittype == "masters":
+        metadata_tree.find(".//DISS_description//DISS_project_type").text = 'thesis'
     print('type done')
 
     # set dates
@@ -233,12 +242,12 @@ def processdeposit(deposittype):
 
     # write XML to temp file
     metadata_tree = metadata_tree.getroot()
-    with open(app.config['UPLOAD_FOLDER'] + xml_file, 'w+') as fh:
+    with open(os.path.join(app.config['UPLOAD_FOLDER'],xml_file), 'w+') as fh:
         fh.write(etree.tostring(metadata_tree, encoding='unicode')) # , pretty_print=True (for lxml)
 
     # create the zip file and write uploaded files and metadata to it
     # contextlib.closing needed for python 2.6
-    with contextlib.closing(ZipFile(app.config['UPLOAD_FOLDER'] + zip_file, "w")) as depositzip:
+    with contextlib.closing(ZipFile(os.path.join(app.config['UPLOAD_FOLDER'],zip_file), "w")) as depositzip:
         depositzip.write(xml_file)
         depositzip.write(request.files['primaryfile'].filename)
         for file in request.files.getlist("supplementalfiles"):
@@ -246,12 +255,12 @@ def processdeposit(deposittype):
                 depositzip.write(file.filename)
 
     # encode the zip file and create sword call file
-    encodedzip = base64.b64encode(open(app.config['UPLOAD_FOLDER'] + zip_file, 'rb').read()).decode()
+    encodedzip = base64.b64encode(open(os.path.join(app.config['UPLOAD_FOLDER'],zip_file), 'rb').read()).decode()
 
     # copy the deposit.txt file to app.config['UPLOAD_FOLDER']
-    shutil.copyfile(app_path + '/static/deposit.txt', app.config['UPLOAD_FOLDER'] + txt_file)
-    sword_call = open(app.config['UPLOAD_FOLDER'] + txt_file, 'r').read().format(encoding=encodedzip)
-    open(app.config['UPLOAD_FOLDER'] + txt_file, 'w').write(sword_call)
+    shutil.copyfile(os.path.join(app_path,'static/deposit.txt'), os.path.join(app.config['UPLOAD_FOLDER'],txt_file))
+    sword_call = open(os.path.join(app.config['UPLOAD_FOLDER'],txt_file), 'r').read().format(encoding=encodedzip)
+    open(os.path.join(app.config['UPLOAD_FOLDER'],txt_file), 'w').write(sword_call)
 
     # set request url and authentication
     deposit_url = config.get('deposit_url').format(
@@ -267,7 +276,7 @@ def processdeposit(deposittype):
     }
 
     # get saved text blob and make the call
-    data = open(app.config['UPLOAD_FOLDER'] + txt_file, 'rb').read()
+    data = open(os.path.join(app.config['UPLOAD_FOLDER'],txt_file), 'rb').read()
     print("sending file")
     r = requests.post(deposit_url, headers=headers, data=data)
 
@@ -280,13 +289,13 @@ def processdeposit(deposittype):
     clearsession()
 
     # delete the files
-    os.remove(app.config['UPLOAD_FOLDER'] + '/' + request.files['primaryfile'].filename)
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'],request.files['primaryfile'].filename))
     for file in request.files.getlist("supplementalfiles"):
        if file.filename != '':
-           os.remove(app.config['UPLOAD_FOLDER'] + '/' + file.filename)
-    os.remove(app.config['UPLOAD_FOLDER'] + '/' + zip_file)
-    os.remove(app.config['UPLOAD_FOLDER'] + '/' + xml_file)
-    os.remove(app.config['UPLOAD_FOLDER'] + '/' + txt_file)
+           os.remove(os.path.join(app.config['UPLOAD_FOLDER'],file.filename))
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'],zip_file))
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'],xml_file))
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'],txt_file))
 
     return r.status_code
     #return 201
@@ -296,6 +305,8 @@ def processdeposit(deposittype):
 @app.errorhandler(404)
 @app.errorhandler(415)
 @app.errorhandler(500)
+@app.errorhandler(502)
+@app.errorhandler(504)
 def http_error_handler(error):
     #msg = EmailMessage()
     #msg.set_content('Dear UM SWORD admin,\n\nThere has been an error on the SWORD deposit server with the following message:\n\n%s\n\nkind regards\nfrom the server' % (error))
@@ -339,9 +350,11 @@ def index():
         if session['step'] == "depositform":
             depositresult = processdeposit(request.form['deposittype'])
             if depositresult == 201:
+                slackmsg("New submission to https://miami.alma.exlibrisgroup.com/mng/action/home.do?mode=ajax from  https://portal.scholarship.miami.edu")
                 return render_template("deposit_result.html", form=request.form, files=request.files)
             else:
                 # return render_template('error.html')
+                slackmsg(depositresult)
                 return http_error_handler(depositresult)
         else:
             return http_error_handler('bad path')
