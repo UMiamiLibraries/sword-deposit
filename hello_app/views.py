@@ -192,7 +192,7 @@ def processdeposit(deposittype):
 
     # set availability
     if request.form['availability'] == "open access":
-        metadata_tree.find(".//DISS_repository//DISS_access_option").text = "9623461160002976"
+        metadata_tree.find(".//DISS_repository//DISS_access_option").text = "Open access"
         # metadata_tree.find(".//DISS_repository//DISS_access_option").text = "Research:open"
     else:
         # only date is needed, embargo is automatically set
