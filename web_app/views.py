@@ -13,7 +13,7 @@ import xml.etree.ElementTree as etree
 from flask import Flask, render_template, request, send_file, session
 
 # import application variables
-from .config_local_docker import config
+from .config_prod import config
 from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
@@ -62,9 +62,9 @@ def processdeposit(deposittype):
     os.chdir(app.config['UPLOAD_FOLDER'])
 
     # provide feedback
-    print(request.form)
-    print(request.files['primaryfile'].filename)
-    print(request.files.getlist('supplementalfiles'))
+    #print(request.form)
+    #print(request.files['primaryfile'].filename)
+    #print(request.files.getlist('supplementalfiles'))
 
     # save files
     if request.files['primaryfile']:
@@ -101,7 +101,7 @@ def processdeposit(deposittype):
             attachmenttype = etree.SubElement(metadata_tree.find(".//DISS_attachment[last()]"), "DISS_file_category")
             attachmenttype.text = "supplemental"
 
-    print('files done')
+    #print('files done')
 
     # set author name and email
     metadata_tree.find(".//DISS_author//DISS_name//DISS_surname").text = request.form['authorlname']
@@ -112,14 +112,14 @@ def processdeposit(deposittype):
     # set title
     metadata_tree.find(".//DISS_description//DISS_title").text = request.form['title']
 
-    print('about to make a ',deposittype,'deposit')
+    #print('about to make a ',deposittype,'deposit')
 
     # set project type
     if deposittype == "dissertation":
         metadata_tree.find(".//DISS_description//DISS_project_type").text = request.form['degreetype']
     elif deposittype == "masters":
         metadata_tree.find(".//DISS_description//DISS_project_type").text = 'thesis'
-    print('type done')
+    #print('type done')
 
     # set dates
     #DEGREE DATE REQUIRED
@@ -127,7 +127,7 @@ def processdeposit(deposittype):
     metadata_tree.find(".//DISS_description//DISS_dates//DISS_manuscript_date").text = request.form['pubdate']
     metadata_tree.find(".//DISS_description//DISS_dates//DISS_defense_date").text = request.form['defensedate']
 
-    print('dates done')
+    #print('dates done')
 
     # set degree
     metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_abbreviation").text = request.form['degreename']
@@ -139,7 +139,7 @@ def processdeposit(deposittype):
     # metadata_tree.find(".//DISS_description//DISS_advisor//DISS_name//DISS_fname").text = "AdvisorF"
     # metadata_tree.find(".//DISS_description//DISS_advisor//DISS_name//DISS_order").text = "1"
 
-    print('basic meta done')
+    #print('basic meta done')
 
     # set committee members
     cmtemembers = metadata_tree.findall(".//DISS_description//DISS_cmte_member")
@@ -196,7 +196,7 @@ def processdeposit(deposittype):
     # metadata_tree.find(".//DISS_description//DISS_cmte_member//DISS_name//DISS_fname").text = "CmteF"
     # metadata_tree.find(".//DISS_description//DISS_cmte_member//DISS_name//DISS_order").text = "1"
 
-    print('committee done')
+    #print('committee done')
 
     # set availability
     if request.form['availability'] == "open access":
@@ -266,7 +266,7 @@ def processdeposit(deposittype):
         username=config.get('deposit_username'), 
         password=config.get('deposit_password')
     )
-    print (deposit_url)
+    #print (deposit_url)
 
     # set the headers
     headers = {
@@ -276,7 +276,7 @@ def processdeposit(deposittype):
 
     # get saved text blob and make the call
     data = open(os.path.join(app.config['UPLOAD_FOLDER'],txt_file), 'rb').read()
-    print("sending file")
+    #print("sending file")
     r = requests.post(deposit_url, headers=headers, data=data)
 
     #logging.info("---------------------")
