@@ -396,11 +396,11 @@
           c = c + $("#supplementalfiles")[0].files[k].size;
           return c; 
         },0);
-        if (suppsize > 12000000) {
+        if (suppsize > 12582912) { // 12MB
           $("#supplementalfiles").next().next().next().addClass('d-block');
           return false;
         }
-        if ($("#primaryfile")[0].files[0].size > 16000000) {
+        if ($("#primaryfile")[0].files[0].size > 33554432) { // 32MB
           $("#primaryfile").next().next().addClass('d-block');
           return false;
         }
@@ -467,8 +467,6 @@
       // make sure defense date date picker works for all browsers
       $( document ).ready(function() {
         $('#defensedate').datepicker({ maxDate: 0, dateFormat: "yy-mm-dd" });
-
-
       });
       // add the inprogress div
       $("body").append('<div style="background-color: rgba(255,255,255,0.7); position: absolute; top: 0px; left: 0px; height: '+$(document).height()+'px; Width: 100%; z-index: 100; display: none;" name="inprogress" id="inprogress"><center><img src="../static/loader.gif" style="position: fixed; bottom: 50%; margin-left: -40px;"></center></div>');
