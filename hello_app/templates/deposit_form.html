@@ -169,7 +169,7 @@
 
         <!-- COMMITTEE MEMBERS -->
          <div class="card mb-3">
-            <div class="card-header">Committee Members</div>
+            <div class="card-header">Committee Members <small class="text-muted">3 required</small></div>
             <div class="card-body">
                 <p class="card-text">
                     Add the names of the committee members (up to 7). The Chairperson’s name (Mentor's
@@ -248,9 +248,9 @@
             <div class="card-header">Abstract</div>
             <div class="card-body">
                 <p class="card-text">
-                    1800 character limit. <strong>Please note that your text will get cut off if you reach the limit.</strong>
-                    Do not include the Abstract heading that appears in the manuscript. Do not paste directly from a Microsoft Word
-                    document. 'Save as' a text file, then copy/paste from the saved file.
+                    1800 character limit. <strong>Please note that you will not be able to paste any text that is longer
+                    than the character limit.</strong> Do not include the Abstract heading that appears in the manuscript.
+                    Do not paste directly from a Microsoft Word document. 'Save as' a text file, then copy/paste from the saved file.
                  </p>
                 {{ ckeditor.create(name='abstract') }}
             </div>
