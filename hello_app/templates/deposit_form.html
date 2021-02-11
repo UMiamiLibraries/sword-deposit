@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block header %}
-  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <script src="../static/ckeditor/ckeditor.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -249,7 +250,7 @@
                     Do not include the Abstract heading that appears in the manuscript. Do not paste directly from a Microsoft Word
                     document. 'Save as' a text file, then copy/paste from the saved file.
                  </p>
-                <textarea class="form-control" id="abstract" name="abstract" rows="10" maxlength="1800"></textarea>
+                {{ ckeditor.create(name='abstract') }}
             </div>
         </div>
 
