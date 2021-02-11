@@ -131,5 +131,5 @@ formdata = {
         }
     },
     'grad_email': 'grad.dissertation@miami.edu',
-    'jason_email': 'j.cohen4@miami.edu'
+    'repository_manager_email': 'j.cohen4@miami.edu'
 }
