@@ -335,7 +335,7 @@
             <div class="card-header">Upload Primary Full Text <small class="text-muted">required</small></div>
             <div class="card-body">
                 <p class="card-text">
-                    Please attach your primary full text file. The only allowed primary format is pdf.<br><br>NOTE: Maximum total upload limit is 16MB for the primary file. If your primary file is over 16MB please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('jason_email') }}) and then submit this form with the title page of your document as the primary file.
+                    Please attach your primary full text file. The only allowed primary format is pdf.<br><br>NOTE: Maximum total upload limit is 32MB for the primary file. If your primary file is over 32MB please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('jason_email') }}) and then submit this form with the title page of your document as the primary file.
                 </p>
                 <div class="form-group">
                     <!--<label class="custom-file-label" for="file">Upload Full Text</label>-->
@@ -344,7 +344,7 @@
                            accept=".pdf,application/pdf"
                            required>
                     <div class="invalid-feedback">You must include a primary file</div> 
-                    <div class="invalid-feedback">Your primary file is over 16MB</div> 
+                    <div class="invalid-feedback">Your primary file is over 32MB</div> 
                 </div>
             </div>
         </div>
