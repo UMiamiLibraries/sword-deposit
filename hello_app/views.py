@@ -11,12 +11,25 @@ from . import app
 import requests
 import xml.etree.ElementTree as etree
 from flask import Flask, render_template, request, send_file, session
+from flask_mail import Mail, Message
 
 # import application variables
 from .config_prod import config
 from .parameters import formdata
 
+
 app.secret_key = config.get('secret_key')
+app.MAIL_SERVER = "smtp.cgcent.miami.edu"
+app.MAIL_PORT = "25"
+#app.MAIL_USE_TLS : default False
+#app.MAIL_USE_SSL : default False
+#app.MAIL_DEBUG : default app.debug
+#app.MAIL_USERNAME : default None
+#app.MAIL_PASSWORD : default None
+app.MAIL_DEFAULT_SENDER = "no-reply@miami.edu"
+#app.MAIL_MAX_EMAILS = "default None"
+#app.MAIL_SUPPRESS_SEND = "default app.testing"
+#app.MAIL_ASCII_ATTACHMENTS = "default False"
 
 # generate dates for embargo in the form
 def getdates():
@@ -285,6 +298,12 @@ def processdeposit(deposittype):
     #logging.info('title: ' + request.form['title'])
     #logging.info('date: ' + request.form['pubdate'])
     #logging.info('status: ' + str(r.status_code) + "  " + r.text)
+
+    mail = Mail()
+
+    msg = Message("Hello",
+                  recipients=["cgb37@miami.edu"])
+    mail.send(msg)
 
     clearsession()
 
