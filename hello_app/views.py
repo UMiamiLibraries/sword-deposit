@@ -14,7 +14,7 @@ from flask import Flask, render_template, request, send_file, session
 from flask_mail import Mail, Message
 
 # import application variables
-from .config_prod import config
+from .config_staging import config
 from .parameters import formdata
 
 
@@ -299,11 +299,11 @@ def processdeposit(deposittype):
     #logging.info('date: ' + request.form['pubdate'])
     #logging.info('status: ' + str(r.status_code) + "  " + r.text)
 
-    mail = Mail()
-
-    msg = Message("Hello",
-                  recipients=["cgb37@miami.edu"])
-    mail.send(msg)
+    # mail = Mail()
+    #
+    # msg = Message("Hello",
+    #               recipients=["cgb37@miami.edu"])
+    # mail.send(msg)
 
     clearsession()
 
