@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block header %}
-  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <script src="../static/ckeditor/ckeditor.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -148,10 +149,12 @@
 
         <!-- DEPARTMENT -->
         <div class="card mb-3">
-            <div class="card-header">Department <small class="text-muted">required</small></div>
+            <div class="card-header">Degree Program <small class="text-muted">required</small></div>
             <div class="card-body">
                 <p class="card-text">
-                    Please select your department. If you do not see your department in the drop down list, please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('jason_email') }}).
+                    Please select your degree program. If you do not see your degree program in the drop down list,
+                    please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository
+                    Manager ({{ formdata.get('repository_manager_email') }}).
                 </p>
                 <div class="form-group">
                     <select class="form-control" name="department" required>
@@ -166,7 +169,7 @@
 
         <!-- COMMITTEE MEMBERS -->
          <div class="card mb-3">
-            <div class="card-header">Committee Members</div>
+            <div class="card-header">Committee Members <small class="text-muted">3 required</small></div>
             <div class="card-body">
                 <p class="card-text">
                     Add the names of the committee members (up to 7). The Chairperson’s name (Mentor's
@@ -245,33 +248,14 @@
             <div class="card-header">Abstract</div>
             <div class="card-body">
                 <p class="card-text">
-                    1800 character limit. <strong>Please note that your text will get cut off if you reach the limit.</strong>
-                    Do not include the Abstract heading that appears in the manuscript. Do not paste directly from a Microsoft Word
-                    document. 'Save as' a text file, then copy/paste from the saved file.
+                    1800 character limit. <strong>Please note that you will not be able to paste any text that is longer
+                    than the character limit.</strong> Do not include the Abstract heading that appears in the manuscript.
+                    Do not paste directly from a Microsoft Word document. 'Save as' a text file, then copy/paste from the saved file.
+                    <strong>Review text for necessary styling changes.</strong>
                  </p>
-                <textarea class="form-control" id="abstract" name="abstract" rows="10" maxlength="1800"></textarea>
+                {{ ckeditor.create(name='abstract') }}
             </div>
         </div>
-
-        <!-- TOPIC -->
-        <!--
-        <div class="card mb-3">
-            <div class="card-header">Topic <small class="text-muted">required</small></div>
-            <div class="card-body">
-                <div class="form-group">
-                    <select class="form-control" name="topic" required>
-                        <option disabled selected value>Select a primary category</option>
-                        {% for category in formdata.topics %}
-                            <option disabled>{{ category.upper() }}</option>
-                            {% for topic in formdata.topics.get(category) %}
-                                <option>   {{ topic }}</option>
-                            {% endfor %}
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-        </div>
-        -->
 
         <!-- KEYWORDS -->
          <div class="card mb-3">
@@ -319,7 +303,7 @@
                 <p class="card-text">
                     If your ETD is in English, do not modify this selection. If you are approved to submit in a
                     language other than English, please select it from the drop down. If the language does not appear
-                    in the dropdown, please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('jason_email') }}) to get pre-approval.
+                    in the dropdown, please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('repository_manager_email') }}) to get pre-approval.
                  </p>
                 <select class="form-control" id="language" name="language" required>
                     <option value="EN" default>English</option>
@@ -335,7 +319,7 @@
             <div class="card-header">Upload Primary Full Text <small class="text-muted">required</small></div>
             <div class="card-body">
                 <p class="card-text">
-                    Please attach your primary full text file. The only allowed primary format is pdf.<br><br>NOTE: Maximum total upload limit is 16MB for the primary file. If your primary file is over 16MB please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('jason_email') }}) and then submit this form with the title page of your document as the primary file.
+                    Please attach your primary full text file. The only allowed primary format is pdf.<br><br>NOTE: Maximum total upload limit is 16MB for the primary file. If your primary file is over 16MB please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('repository_manager_email') }}) and then submit this form with the title page of your document as the primary file.
                 </p>
                 <div class="form-group">
                     <!--<label class="custom-file-label" for="file">Upload Full Text</label>-->
@@ -354,7 +338,7 @@
             <div class="card-header">Upload Supplemental Files <small class="text-muted"></small></div>
             <div class="card-body">
                 <p class="card-text">
-                    Allowed supplemental formats are txt, csv, pdf, docx, jpg, tif, png, xlsx, mp3, wav, avi, mov, and wmv.<br><br>NOTE: Maximum total upload limit is 12MB for the combined supplemental material. If your supplemental material is over 12MB please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('jason_email') }}) and then submit this form with the primary file still attached.
+                    Allowed supplemental formats are txt, csv, pdf, docx, jpg, tif, png, xlsx, mp3, wav, avi, mov, and wmv.<br><br>NOTE: Maximum total upload limit is 12MB for the combined supplemental material. If your supplemental material is over 12MB please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('repository_manager_email') }}) and then submit this form with the primary file still attached.
                 </p>
                 <div class="form-group">
                     <label for="supplementalfiles">Supplemental Files:</label>

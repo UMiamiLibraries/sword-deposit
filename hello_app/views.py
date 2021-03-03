@@ -44,6 +44,7 @@ def getdates():
 def clearsession():
     session.pop('deposittype', None)
     session.pop('step', None)
+    print('session clear')
 
 
 def slackmsg(msg):
@@ -299,14 +300,6 @@ def processdeposit(deposittype):
     #logging.info('date: ' + request.form['pubdate'])
     #logging.info('status: ' + str(r.status_code) + "  " + r.text)
 
-    # mail = Mail()
-    #
-    # msg = Message("Hello",
-    #               recipients=["cgb37@miami.edu"])
-    # mail.send(msg)
-
-    clearsession()
-
     # delete the files
     os.remove(os.path.join(app.config['UPLOAD_FOLDER'],request.files['primaryfile'].filename))
     for file in request.files.getlist("supplementalfiles"):
@@ -316,6 +309,7 @@ def processdeposit(deposittype):
     os.remove(os.path.join(app.config['UPLOAD_FOLDER'],xml_file))
     os.remove(os.path.join(app.config['UPLOAD_FOLDER'],txt_file))
 
+    print(r.status_code)
     return r.status_code
     #return 201
 
@@ -370,6 +364,7 @@ def index():
             depositresult = processdeposit(request.form['deposittype'])
             if depositresult == 201:
                 slackmsg("New submission to https://miami.alma.exlibrisgroup.com/mng/action/home.do?mode=ajax from  https://portal.scholarship.miami.edu")
+                clearsession()
                 return render_template("deposit_result.html", form=request.form, files=request.files)
             else:
                 # return render_template('error.html')
