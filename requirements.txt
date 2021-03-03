@@ -6,3 +6,4 @@ MarkupSafe==1.0
 Werkzeug==0.15.3
 requests==2.20.1
 slack-webhook==1.0.3
+Flask-mail==0.9.1
