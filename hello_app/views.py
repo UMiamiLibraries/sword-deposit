@@ -19,17 +19,8 @@ from .parameters import formdata
 
 
 app.secret_key = config.get('secret_key')
-app.MAIL_SERVER = "smtp.cgcent.miami.edu"
-app.MAIL_PORT = "25"
-#app.MAIL_USE_TLS : default False
-#app.MAIL_USE_SSL : default False
-#app.MAIL_DEBUG : default app.debug
-#app.MAIL_USERNAME : default None
-#app.MAIL_PASSWORD : default None
-app.MAIL_DEFAULT_SENDER = "no-reply@miami.edu"
-#app.MAIL_MAX_EMAILS = "default None"
-#app.MAIL_SUPPRESS_SEND = "default app.testing"
-#app.MAIL_ASCII_ATTACHMENTS = "default False"
+
+
 
 # generate dates for embargo in the form
 def getdates():
@@ -51,6 +42,7 @@ def slackmsg(msg):
     webhook = config.get('slack_webhook')
     slack = Slack(url=webhook)
     slack.post(text=msg)
+
 
 
 # process form data and make sword request to Esploro server
@@ -309,6 +301,9 @@ def processdeposit(deposittype):
     os.remove(os.path.join(app.config['UPLOAD_FOLDER'],xml_file))
     os.remove(os.path.join(app.config['UPLOAD_FOLDER'],txt_file))
 
+
+
+
     print(r.status_code)
     return r.status_code
     #return 201
@@ -332,6 +327,18 @@ def http_error_handler(error):
     print(error)
     return render_template('error.html')
 
+
+@app.route("/email/", methods=['GET'])
+def sendemail():
+    try:
+        mail = Mail()
+        msg = Message("Hello", sender="noreply@miami.edu", recipients=["cgb37@miami.edu"])
+        msg.body = "testing smtp"
+        mail.send(msg)
+        return 'mail send'
+    except Exception as ex:
+        # return render_template('error.html')
+        return str(ex)
 
 @app.route("/um-agreement-pdf/", methods=['GET'])
 def downloadagreement():
@@ -364,6 +371,8 @@ def index():
             depositresult = processdeposit(request.form['deposittype'])
             if depositresult == 201:
                 slackmsg("New submission to https://miami.alma.exlibrisgroup.com/mng/action/home.do?mode=ajax from  https://portal.scholarship.miami.edu")
+
+
                 clearsession()
                 return render_template("deposit_result.html", form=request.form, files=request.files)
             else:

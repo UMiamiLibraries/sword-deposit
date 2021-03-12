@@ -1,6 +1,8 @@
 # Pull a pre-built alpine docker image with nginx and python3 installed
 FROM tiangolo/uwsgi-nginx-flask:python3.6-alpine3.7
 
+
+
 # timezone
 ENV TZ="America/New_York"
 
