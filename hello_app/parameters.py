@@ -131,5 +131,7 @@ formdata = {
         }
     },
     'grad_email': 'grad.dissertation@miami.edu',
-    'repository_manager_email': 'j.cohen4@miami.edu'
+    'repository_manager_email': 'j.cohen4@miami.edu',
+    'app_admin': 'cgb37@miami.edu',
+    'app_developer': 'eprieto502@miami.edu'
 }

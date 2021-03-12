@@ -328,12 +328,16 @@ def http_error_handler(error):
     return render_template('error.html')
 
 
-@app.route("/email/", methods=['GET'])
-def sendemail():
+def sendemail(body):
     try:
         mail = Mail()
-        msg = Message("Hello", sender="noreply@miami.edu", recipients=["cgb37@miami.edu"])
-        msg.body = "testing smtp"
+        msg = Message("ETD Submission Completed", sender="noreply@miami.edu",
+                      recipients=[formdata['app_admin'],
+                                    formdata['app_developer'],
+                                    formdata['grad_email'],
+                                    formdata['repository_manager_email']
+                                  ])
+        msg.body = body
         mail.send(msg)
         return 'mail send'
     except Exception as ex:
@@ -370,8 +374,12 @@ def index():
         if session['step'] == "depositform":
             depositresult = processdeposit(request.form['deposittype'])
             if depositresult == 201:
+                # send msg to slack
                 slackmsg("New submission to https://miami.alma.exlibrisgroup.com/mng/action/home.do?mode=ajax from  https://portal.scholarship.miami.edu")
 
+                # send email
+                body = "testing etd submission form email functionality. please disregard as this is just a test."
+                sendemail(body)
 
                 clearsession()
                 return render_template("deposit_result.html", form=request.form, files=request.files)
