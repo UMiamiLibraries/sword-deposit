@@ -371,8 +371,10 @@ def index():
         if session['step'] == "depositform":
             depositresult = processdeposit(request.form['deposittype'])
             if depositresult == 201:
+
+                fullname = request.form['authorfname'] + ' ' + request.form['authorlname']
                 # send msg to slack
-                slackmsg("New submission to https://miami.alma.exlibrisgroup.com/mng/action/home.do?mode=ajax from  https://portal.scholarship.miami.edu")
+                slackmsg("New ETD submission to Esploro from " + fullname)
 
                 # send email
                 sendemail(request.form)
