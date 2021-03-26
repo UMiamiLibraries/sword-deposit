@@ -43,7 +43,21 @@ def slackmsg(msg):
     slack = Slack(url=webhook)
     slack.post(text=msg)
 
-
+def sendemail(body):
+    try:
+        mail = Mail()
+        msg = Message("ETD Submission Completed", sender="noreply@miami.edu",
+                      recipients=[formdata['app_admin'],
+                                  formdata['app_developer'],
+                                  formdata['grad_email'],
+                                  formdata['repository_manager_email']
+                                  ])
+        msg.body = body
+        mail.send(msg)
+        return 'mail send'
+    except Exception as ex:
+        # return render_template('error.html')
+        return str(ex)
 
 # process form data and make sword request to Esploro server
 def processdeposit(deposittype):
@@ -328,21 +342,7 @@ def http_error_handler(error):
     return render_template('error.html')
 
 
-def sendemail(body):
-    try:
-        mail = Mail()
-        msg = Message("ETD Submission Completed", sender="noreply@miami.edu",
-                      recipients=[formdata['app_admin'],
-                                    formdata['app_developer'],
-                                    formdata['grad_email'],
-                                    formdata['repository_manager_email']
-                                  ])
-        msg.body = body
-        mail.send(msg)
-        return 'mail send'
-    except Exception as ex:
-        # return render_template('error.html')
-        return str(ex)
+
 
 @app.route("/um-agreement-pdf/", methods=['GET'])
 def downloadagreement():
