@@ -35,7 +35,8 @@ def clearsession():
     #print('session clear')
 
 
-def slackmsg(msg):
+def slackmsg(fullname):
+    msg = "New ETD submission to Esploro from " + fullname
     webhook = config.get('slack_webhook')
     slack = Slack(url=webhook)
     slack.post(text=msg)
@@ -374,7 +375,7 @@ def index():
 
                 fullname = request.form['authorfname'] + ' ' + request.form['authorlname']
                 # send msg to slack
-                slackmsg("New ETD submission to Esploro from " + fullname)
+                slackmsg(fullname)
 
                 # send email
                 sendemail(request.form)
