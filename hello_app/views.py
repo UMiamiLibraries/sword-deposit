@@ -46,10 +46,11 @@ def slackmsg(msg):
 def sendemail(body):
     try:
         mail = Mail()
-        msg = Message("ETD Submission Completed", sender="noreply@miami.edu",
+        msg = Message("ETD Submission: A new thesis/dissertation uploaded by " + request.form['authoremail'], sender="noreply@miami.edu",
                       recipients=[formdata['app_admin'],
                                   formdata['app_developer'],
-                                  formdata['grad_email'],
+                                  formdata['grad_service_account'],
+                                  formdata['grad_admin'],
                                   formdata['repository_manager_email']
                                   ])
         msg.body = body
