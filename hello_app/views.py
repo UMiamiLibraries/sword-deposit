@@ -11,12 +11,16 @@ from . import app
 import requests
 import xml.etree.ElementTree as etree
 from flask import Flask, render_template, request, send_file, session
+from flask_mail import Mail, Message
 
 # import application variables
-from .config_prod import config
+from .config_staging import config
 from .parameters import formdata
 
+
 app.secret_key = config.get('secret_key')
+
+
 
 # generate dates for embargo in the form
 def getdates():
@@ -31,12 +35,14 @@ def getdates():
 def clearsession():
     session.pop('deposittype', None)
     session.pop('step', None)
+    print('session clear')
 
 
 def slackmsg(msg):
     webhook = config.get('slack_webhook')
     slack = Slack(url=webhook)
     slack.post(text=msg)
+
 
 
 # process form data and make sword request to Esploro server
@@ -286,8 +292,6 @@ def processdeposit(deposittype):
     #logging.info('date: ' + request.form['pubdate'])
     #logging.info('status: ' + str(r.status_code) + "  " + r.text)
 
-    clearsession()
-
     # delete the files
     os.remove(os.path.join(app.config['UPLOAD_FOLDER'],request.files['primaryfile'].filename))
     for file in request.files.getlist("supplementalfiles"):
@@ -297,6 +301,10 @@ def processdeposit(deposittype):
     os.remove(os.path.join(app.config['UPLOAD_FOLDER'],xml_file))
     os.remove(os.path.join(app.config['UPLOAD_FOLDER'],txt_file))
 
+
+
+
+    print(r.status_code)
     return r.status_code
     #return 201
 
@@ -319,6 +327,22 @@ def http_error_handler(error):
     print(error)
     return render_template('error.html')
 
+
+def sendemail(body):
+    try:
+        mail = Mail()
+        msg = Message("ETD Submission Completed", sender="noreply@miami.edu",
+                      recipients=[formdata['app_admin'],
+                                    formdata['app_developer'],
+                                    formdata['grad_email'],
+                                    formdata['repository_manager_email']
+                                  ])
+        msg.body = body
+        mail.send(msg)
+        return 'mail send'
+    except Exception as ex:
+        # return render_template('error.html')
+        return str(ex)
 
 @app.route("/um-agreement-pdf/", methods=['GET'])
 def downloadagreement():
@@ -350,7 +374,14 @@ def index():
         if session['step'] == "depositform":
             depositresult = processdeposit(request.form['deposittype'])
             if depositresult == 201:
+                # send msg to slack
                 slackmsg("New submission to https://miami.alma.exlibrisgroup.com/mng/action/home.do?mode=ajax from  https://portal.scholarship.miami.edu")
+
+                # send email
+                body = "testing etd submission form email functionality. please disregard as this is just a test."
+                sendemail(body)
+
+                clearsession()
                 return render_template("deposit_result.html", form=request.form, files=request.files)
             else:
                 # return render_template('error.html')
