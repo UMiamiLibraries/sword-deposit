@@ -10,7 +10,7 @@
 		<ul class="list-unstyled">
 			<li><strong>Title:</strong> {{ form.title }}</li>
 			<li><strong>Author:</strong> {{ form.authorfname }} {% if form.authormname %} {{ form.authormname }} {% endif %}{{ form.authorlname }}</li>
-			<li><strong>Abstract:</strong> {{ form.abstract[:100] }}...</li>
+			<li><strong>Abstract:</strong> {{ form.abstract[:100] | safe }}...</li>
 
 			{% if form.deposittype == 'dissertation' %}
 				<li><strong>Degree Type:</strong> {{ form.degreetype }}</li>
@@ -28,7 +28,9 @@
 				<li><strong>Keywords:</strong>
 						<ul class="list-unstyled">
 						{% for keyword in form.getlist('keywords') %}
-								<li>{{ keyword }}</li>
+							{% if keyword %}
+							<li>{{ keyword }}</li>
+							{% endif %}
 						{% endfor %}
 						</ul>
 				</li>
