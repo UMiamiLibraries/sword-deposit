@@ -43,18 +43,20 @@ def slackmsg(msg):
     slack = Slack(url=webhook)
     slack.post(text=msg)
 
-def sendemail(body):
+def sendemail(email_data):
     try:
         mail = Mail()
-        msg = Message("ETD Submission Completed", sender="noreply@miami.edu",
+        msg = Message("ETD Submission: A new thesis/dissertation uploaded by " + email_data['authoremail'], sender="noreply@miami.edu",
                       recipients=[formdata['app_admin'],
-                                  formdata['app_developer'],
-                                  formdata['grad_email'],
-                                  formdata['repository_manager_email']
+                                  formdata['app_developer']
+                                  # formdata['grad_service_account'],
+                                  # formdata['grad_admin'],
+                                  # formdata['repository_manager_email']
                                   ])
-        msg.body = body
+        #msg.body = body
+        msg.html = render_template("email.html", email_data=email_data)
         mail.send(msg)
-        return 'mail send'
+        #return 'mail send'
     except Exception as ex:
         # return render_template('error.html')
         return str(ex)
@@ -378,8 +380,8 @@ def index():
                 slackmsg("New submission to https://miami.alma.exlibrisgroup.com/mng/action/home.do?mode=ajax from  https://portal.scholarship.miami.edu")
 
                 # send email
-                body = "testing etd submission form email functionality. please disregard as this is just a test."
-                sendemail(body)
+                #body = "testing etd submission form email functionality. please disregard as this is just a test."
+                sendemail(request.form)
 
                 clearsession()
                 return render_template("deposit_result.html", form=request.form, files=request.files)
