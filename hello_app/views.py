@@ -43,18 +43,18 @@ def slackmsg(msg):
     slack = Slack(url=webhook)
     slack.post(text=msg)
 
-def sendemail(body):
+def sendemail(email_data):
     try:
         mail = Mail()
-        msg = Message("ETD Submission: A new thesis/dissertation uploaded by " + request.form['authoremail'], sender="noreply@miami.edu",
+        msg = Message("ETD Submission: A new thesis/dissertation uploaded by " + email_data['authoremail'], sender="noreply@miami.edu",
                       recipients=[formdata['app_admin'],
-                                  formdata['app_developer'],
-                                  formdata['grad_service_account'],
-                                  formdata['grad_admin'],
-                                  formdata['repository_manager_email']
+                                  formdata['app_developer']
+                                  # formdata['grad_service_account'],
+                                  # formdata['grad_admin'],
+                                  # formdata['repository_manager_email']
                                   ])
         #msg.body = body
-        msg.html = render_template("email.html", email_data=request.form)
+        msg.html = render_template("email.html", email_data=email_data)
         mail.send(msg)
         #return 'mail send'
     except Exception as ex:

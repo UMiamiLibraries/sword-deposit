@@ -1,10 +1,8 @@
-<html>
-<body>
 <p>A new thesis/dissertation for Open Access Dissertations has been uploaded by
-    {{ email_data.authorfname }} {% if email_data.authormname %} {{ email_data.authormname }} {% endif %}{{ email_data.authorlname }} {{ email_data.email }}.</p>
+    {{ email_data.authorfname }} {% if email_data.authormname %} {{ email_data.authormname }} {% endif %}{{ email_data.authorlname }} {{ email_data.authoremail }}.</p>
 
 <div>The authors are:</div>
-{{ email_data.authorfname }} {% if email_data.authormname %} {{ email_data.authormname }} {% endif %}{{ email_data.authorlname }} {{ email_data.email }}
+{{ email_data.authorfname }} {% if email_data.authormname %} {{ email_data.authormname }} {% endif %}{{ email_data.authorlname }} {{ email_data.authoremail }}
 
 <div>The title is:</div>
 {{ email_data.title }}
@@ -19,5 +17,3 @@
                 </ul>
         </li>
     {% endif %}
-</body>
-</html>
