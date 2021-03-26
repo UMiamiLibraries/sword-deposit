@@ -7,3 +7,6 @@ Werkzeug==0.15.3
 requests==2.20.1
 slack-webhook==1.0.3
 urllib3>=1.25.9 # not directly required, pinned by Snyk to avoid a vulnerability
+WTForms==2.3.3
+Flask-CKEditor==0.4.4.1
+Flask-mail==0.9.1
