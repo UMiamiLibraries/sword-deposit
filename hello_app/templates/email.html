@@ -1,11 +1,23 @@
-<p>A new thesis/dissertation for Open Access Dissertations has been uploaded by "Oluwamuyiwa Adebayo" <winiade@gmail.com>.</p>
+<html>
+<body>
+<p>A new thesis/dissertation for Open Access Dissertations has been uploaded by
+    {{ email_data.authorfname }} {% if email_data.authormname %} {{ email_data.authormname }} {% endif %}{{ email_data.authorlname }} {{ email_data.email }}.</p>
 
 <div>The authors are:</div>
-"Oluwamuyiwa Adebayo" <winiade@gmail.com>
-<div>The title is:</div>
+{{ email_data.authorfname }} {% if email_data.authormname %} {{ email_data.authormname }} {% endif %}{{ email_data.authorlname }} {{ email_data.email }}
 
-"Proactive HIV Testing among Youth"
+<div>The title is:</div>
+{{ email_data.title }}
 
 <div>The keywords are:</div>
-HIV Testing; Youth; HIV Screening; Proactive HIV Testing; Teen;
-Adolescent
+    {% if email_data.getlist('keywords') %}
+        <li><strong>Keywords:</strong>
+                <ul class="list-unstyled">
+                {% for keyword in email_data.getlist('keywords') %}
+                        <li>{{ keyword }}</li>
+                {% endfor %}
+                </ul>
+        </li>
+    {% endif %}
+</body>
+</html>
