@@ -1,8 +1,9 @@
 click==6.7
 Flask==1.0.2
 itsdangerous==0.24
-Jinja2==2.11.1
+Jinja2==2.11.3
 MarkupSafe==1.0
 Werkzeug==0.15.3
 requests==2.20.1
 slack-webhook==1.0.3
+urllib3>=1.25.9 # not directly required, pinned by Snyk to avoid a vulnerability
