@@ -10,7 +10,7 @@
 		<ul class="list-unstyled">
 			<li><strong>Title:</strong> {{ form.title }}</li>
 			<li><strong>Author:</strong> {{ form.authorfname }} {% if form.authormname %} {{ form.authormname }} {% endif %}{{ form.authorlname }}</li>
-			<li><strong>Abstract:</strong> {{ form.abstract[:100] | safe }}...</li>
+			<li><strong>Abstract:</strong> <p>{{ form.abstract[:100]|safe }}...</p></li>
 
 			{% if form.deposittype == 'dissertation' %}
 				<li><strong>Degree Type:</strong> {{ form.degreetype }}</li>
