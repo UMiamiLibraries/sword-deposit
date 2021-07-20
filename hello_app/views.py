@@ -14,7 +14,7 @@ from flask import Flask, render_template, request, send_file, session
 from flask_mail import Mail, Message
 
 # import application variables
-from .config_staging import config
+from .config_local import config
 from .parameters import formdata
 
 
@@ -38,28 +38,28 @@ def clearsession():
     print('session clear')
 
 
-def slackmsg(msg):
-    webhook = config.get('slack_webhook')
-    slack = Slack(url=webhook)
-    slack.post(text=msg)
+#def slackmsg(msg):
+#    webhook = config.get('slack_webhook')
+#    slack = Slack(url=webhook)
+#    slack.post(text=msg)
 
-def sendemail(email_data):
-    try:
-        mail = Mail()
-        msg = Message("ETD Submission: A new thesis/dissertation uploaded by " + email_data['authoremail'], sender="noreply@miami.edu",
-                      recipients=[formdata['app_admin'],
-                                  formdata['app_developer']
-                                  # formdata['grad_service_account'],
-                                  # formdata['grad_admin'],
-                                  # formdata['repository_manager_email']
-                                  ])
-        #msg.body = body
-        msg.html = render_template("email.html", email_data=email_data)
-        mail.send(msg)
-        #return 'mail send'
-    except Exception as ex:
-        # return render_template('error.html')
-        return str(ex)
+#def sendemail(email_data):
+#    try:
+#        mail = Mail()
+#        msg = Message("ETD Submission: A new thesis/dissertation uploaded by " + email_data['authoremail'], sender="noreply@miami.edu",
+#                      recipients=[formdata['app_admin'],
+#                                  formdata['app_developer']
+#                                  # formdata['grad_service_account'],
+#                                  # formdata['grad_admin'],
+#                                  # formdata['repository_manager_email']
+#                                  ])
+#        #msg.body = body
+#        msg.html = render_template("email.html", email_data=email_data)
+#        mail.send(msg)
+#        #return 'mail send'
+#    except Exception as ex:
+#        # return render_template('error.html')
+#        return str(ex)
 
 # process form data and make sword request to Esploro server
 def processdeposit(deposittype):
@@ -153,8 +153,10 @@ def processdeposit(deposittype):
     print('dates done')
 
     # set degree
-    metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_abbreviation").text = request.form['degreename']
-    metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_name").text = formdata[deposittype]["degreename"].get(request.form['degreename'])
+    #metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_abbreviation").text = request.form['degreename']
+    #metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_name").text = formdata[deposittype]["degreename"].get(request.form['degreename'])
+    metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_name").text = request.form['degreename']
+
     #set department
     metadata_tree.find(".//DISS_description//DISS_inst_department").text = request.form['department']
     # set advisors
@@ -222,8 +224,9 @@ def processdeposit(deposittype):
     print('committee done')
 
     # set availability
-    if request.form['availability'] == "open access":
-        metadata_tree.find(".//DISS_repository//DISS_access_option").text = "9623461160002976"
+    if request.form['availability'] == "open":
+        metadata_tree.find(".//DISS_repository//DISS_access_option").text = 'Open'
+        print("open")
         # metadata_tree.find(".//DISS_repository//DISS_access_option").text = "Research:open"
     else:
         # only date is needed, embargo is automatically set
@@ -377,11 +380,11 @@ def index():
             depositresult = processdeposit(request.form['deposittype'])
             if depositresult == 201:
                 # send msg to slack
-                slackmsg("New submission to https://miami.alma.exlibrisgroup.com/mng/action/home.do?mode=ajax from  https://portal.scholarship.miami.edu")
+                #slackmsg("New submission to https://miami.alma.exlibrisgroup.com/mng/action/home.do?mode=ajax from  https://portal.scholarship.miami.edu")
 
                 # send email
                 #body = "testing etd submission form email functionality. please disregard as this is just a test."
-                sendemail(request.form)
+                #sendemail(request.form)
 
                 clearsession()
                 return render_template("deposit_result.html", form=request.form, files=request.files)

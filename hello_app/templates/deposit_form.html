@@ -128,21 +128,18 @@
             <div class="card-header">Degree Name <small class="text-muted">required</small></div>
             <div class="card-body">
                 <div class="form-group">
-                    {% if formdata.deposittype == "dissertation" %}
-                        {% for name in formdata.dissertation.degreename %}
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="degreename" id="{{ name }}" value="{{ name }}" required>
-                                <label class="form-check-label" for="{{ name }}">{{ formdata.dissertation.degreename.get(name) }}</label>
-                            </div>
-                        {% endfor %}
-                    {% elif formdata.deposittype == "masters" %}
-                        {% for name in formdata.masters.degreename %}
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="degreename" id="{{ name }}" value="{{ name }}" required>
-                                <label class="form-check-label" for="{{ name }}">{{ formdata.masters.degreename.get(name) }}</label>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+                    <select class="form-control" name="degreename" required>
+                        <option disabled selected value>Select a Degree Name</option>
+                        {% if formdata.deposittype == "dissertation" %}
+                            {% for degree in formdata.dissertation.degreename %}
+                                <option name="degree" value="{{ degree }}">{{ degree }}</option>
+                            {% endfor %}
+                        {% elif formdata.deposittype == "masters" %}
+                            {% for degree in formdata.masters.degreename %}
+                                 <option name="degree" value="{{ degree }}">{{ degree }}</option>
+                            {% endfor %}
+                        {% endif %}
+                    </select>
                 </div>
             </div>
         </div>
@@ -160,7 +157,7 @@
                     <select class="form-control" name="department" required>
                         <option disabled selected value>Select a department</option>
                         {% for department in formdata.departments %}
-                            <option name="department" value="{{ department }}">{{ department }}</option>
+                            <option name="department" value="{{ department[0] }}">{{ department[1] }}</option>
                         {% endfor %}
                     </select>
                 </div>
