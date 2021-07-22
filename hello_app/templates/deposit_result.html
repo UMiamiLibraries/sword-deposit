@@ -26,13 +26,13 @@
 
 			{% if form.getlist('keywords') %}
 				<li><strong>Keywords:</strong>
-						<ul class="list-unstyled">
+					<ul class="list-unstyled">
 						{% for keyword in form.getlist('keywords') %}
 							{% if keyword %}
 							<li>{{ keyword }}</li>
 							{% endif %}
 						{% endfor %}
-						</ul>
+					</ul>
 				</li>
 			{% endif %}
 

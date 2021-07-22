@@ -149,8 +149,10 @@ def processdeposit(deposittype):
     print('dates done')
 
     # set degree
-    metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_abbreviation").text = request.form['degreename']
-    metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_name").text = formdata[deposittype]["degreename"].get(request.form['degreename'])
+    #metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_abbreviation").text = request.form['degreename']
+    #metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_name").text = formdata[deposittype]["degreename"].get(request.form['degreename'])
+    metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_name").text = request.form['degreename']
+
     #set department
     metadata_tree.find(".//DISS_description//DISS_inst_department").text = request.form['department']
     # set advisors
