@@ -220,8 +220,8 @@ def processdeposit(deposittype):
     print('committee done')
 
     # set availability
-    if request.form['availability'] == "open access":
-        metadata_tree.find(".//DISS_repository//DISS_access_option").text = "9623461160002976"
+    if request.form['availability'] == "open":
+        metadata_tree.find(".//DISS_repository//DISS_access_option").text = 'Open'
         # metadata_tree.find(".//DISS_repository//DISS_access_option").text = "Research:open"
     else:
         # only date is needed, embargo is automatically set
