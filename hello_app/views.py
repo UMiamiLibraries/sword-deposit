@@ -14,7 +14,7 @@ from flask import Flask, render_template, request, send_file, session
 from flask_mail import Mail, Message
 
 # import application variables
-from .config_staging import config
+from .config_prod import config
 from .parameters import formdata
 
 
@@ -49,9 +49,9 @@ def sendemail(email_data):
         msg = Message("ETD Submission: A new thesis/dissertation uploaded by " + email_data['authoremail'], sender="noreply@miami.edu",
                       recipients=[formdata['app_admin'],
                                   formdata['app_developer']
-                                  # formdata['grad_service_account'],
-                                  # formdata['grad_admin'],
-                                  # formdata['repository_manager_email']
+                                  formdata['grad_service_account'],
+                                  formdata['grad_admin'],
+                                  formdata['repository_manager_email']
                                   ])
         #msg.body = body
         msg.html = render_template("email.html", email_data=email_data)
