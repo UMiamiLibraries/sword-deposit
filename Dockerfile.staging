@@ -1,8 +1,8 @@
 # Pull a pre-built alpine docker image with nginx and python3 installed
 FROM tiangolo/uwsgi-nginx-flask:python3.6-alpine3.7
 
-
-
+# docker build --no-cache -f Dockerfile.staging -t devumlacr.azurecr.io/staging-e-etdsubmission:v3.2.0 .
+# docker push devumlacr.azurecr.io/staging-e-etdsubmission:v3.2.0
 # timezone
 ENV TZ="America/New_York"
 

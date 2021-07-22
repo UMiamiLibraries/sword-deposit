@@ -14,7 +14,7 @@ from flask import Flask, render_template, request, send_file, session
 from flask_mail import Mail, Message
 
 # import application variables
-from .config_prod import config
+from .config_staging import config
 from .parameters import formdata
 
 
