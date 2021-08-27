@@ -185,6 +185,9 @@ formdata = {
             'Theater history': '0644'
         }
     },
-    'grad_email': 'grad.dissertation@miami.edu',
-    'jason_email': 'j.cohen4@miami.edu'
+    'grad_service_account': 'grad.dissertation@miami.edu',
+    'grad_admin': 'dyamamoto@miami.edu',
+    'repository_manager_email': 'j.cohen4@miami.edu',
+    'app_admin': 'cgb37@miami.edu',
+    'app_developer': 'eprieto502@miami.edu'
 }
