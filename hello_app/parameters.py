@@ -15,7 +15,7 @@ formdata = {
         },
         'degrees': {
             'Applied Marine Physics': 'Applied Marine Physics (RSMAS)',
-            'Atmospheric Sciences ': 'Atmospheric Sciences  (RSMAS)',
+            'Atmospheric Sciences ': 'Atmospheric Sciences (RSMAS)',
             'Biochemistry and Molecular Biology': 'Biochemistry and Molecular Biology (Medical)',
             'Biochemistry and Molecular Biology (Executive program)': 'Biochemistry and Molecular Biology (Executive program) (Medical)',
             'Biology': 'Biology (Arts & Sciences)',
