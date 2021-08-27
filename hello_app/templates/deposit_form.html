@@ -151,14 +151,21 @@
                 <p class="card-text">
                     Please select your degree program. If you do not see your degree program in the drop down list,
                     please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository
+                    please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository
                     Manager ({{ formdata.get('repository_manager_email') }}).
                 </p>
                 <div class="form-group">
                     <select class="form-control" name="department" required>
                         <option disabled selected value>Select a department</option>
-                        {% for department in formdata.departments %}
-                            <option name="department" value="{{ department[0] }}">{{ department[1] }}</option>
-                        {% endfor %}
+                        {% if formdata.deposittype == "dissertation" %}
+                            {% for key, value in formdata.dissertation.degrees.items() %}
+                                <option name="department" value="{{ key }}">{{ value }}</option>
+                            {% endfor %}
+                        {% elif formdata.deposittype == "masters" %}
+                            {% for key, value in formdata.masters.degrees.items() %}
+                                <option name="department" value="{{ key }}">{{ value }}</option>
+                            {% endfor %}
+                        {% endif %}
                     </select>
                 </div>
             </div>

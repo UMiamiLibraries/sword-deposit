@@ -340,7 +340,7 @@ def http_error_handler(error):
     # s.send_message(msg)
     # s.quit()
     print(error)
-    return render_template('error.html')
+    return render_template('error.html', formdata=formdata, error=error)
 
 
 @app.route("/um-agreement-pdf/", methods=['GET'])
