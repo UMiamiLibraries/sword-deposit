@@ -14,10 +14,11 @@ from flask import Flask, render_template, request, send_file, session
 from flask_mail import Mail, Message
 
 # import application variables
-from .config_prod import config
+from .config_staging import config
 from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
+
 
 # generate dates for embargo in the form
 def getdates():
@@ -28,11 +29,12 @@ def getdates():
              'eighteenmonths': today + timedelta(weeks=78)}
     return dates
 
-# end session 
+
+# end session
 def clearsession():
     session.pop('deposittype', None)
     session.pop('step', None)
-    #print('session clear')
+    # print('session clear')
 
 
 def slackmsg(fullname):
@@ -41,10 +43,12 @@ def slackmsg(fullname):
     slack = Slack(url=webhook)
     slack.post(text=msg)
 
+
 def sendemail(email_data):
     try:
         mail = Mail()
-        msg = Message("ETD Submission: A new thesis/dissertation uploaded by " + email_data['authoremail'], sender="noreply@miami.edu",
+        msg = Message("ETD Submission: A new thesis/dissertation uploaded by " + email_data['authoremail'],
+                      sender="noreply@miami.edu",
                       recipients=[formdata['app_admin'],
                                   formdata['app_developer'],
                                   formdata['grad_service_account'],
@@ -57,19 +61,19 @@ def sendemail(email_data):
     except Exception as ex:
         return str(ex)
 
+
 # process form data and make sword request to Esploro server
 def processdeposit(deposittype):
-    
     mode = 0o775
 
-    # Set working directories 
+    # Set working directories
     fileserver_path = config.get('fileserver_path')
     app_path = config.get('app_path')
     directory = 'output/'
-    app.config['UPLOAD_FOLDER'] = os.path.join(fileserver_path, directory) 
+    app.config['UPLOAD_FOLDER'] = os.path.join(fileserver_path, directory)
 
-    # Check whether the specified path is an existing directory or not  
-    isdir = os.path.isdir(app.config['UPLOAD_FOLDER'])  
+    # Check whether the specified path is an existing directory or not
+    isdir = os.path.isdir(app.config['UPLOAD_FOLDER'])
     if not isdir:
         try:
             original_umask = os.umask(0)
@@ -98,11 +102,11 @@ def processdeposit(deposittype):
             file.filename = filename
 
     # load blank metadata tree
-    metadata_tree = etree.parse(os.path.join(app_path,'static/metadata_template.xml'))
+    metadata_tree = etree.parse(os.path.join(app_path, 'static/metadata_template.xml'))
 
-    ## 
-     # Populate metadata fields from form
-     ##
+    ##
+    # Populate metadata fields from form
+    ##
 
     # set type
     if deposittype == "dissertation":
@@ -131,7 +135,7 @@ def processdeposit(deposittype):
     # set title
     metadata_tree.find(".//DISS_description//DISS_title").text = request.form['title']
 
-    print('about to make a ',deposittype,'deposit')
+    print('about to make a ', deposittype, 'deposit')
 
     # set project type
     if deposittype == "dissertation":
@@ -141,7 +145,7 @@ def processdeposit(deposittype):
     print('type done')
 
     # set dates
-    #DEGREE DATE REQUIRED
+    # DEGREE DATE REQUIRED
     metadata_tree.find(".//DISS_description//DISS_dates//DISS_degree_date").text = request.form['pubdate']
     metadata_tree.find(".//DISS_description//DISS_dates//DISS_manuscript_date").text = request.form['pubdate']
     metadata_tree.find(".//DISS_description//DISS_dates//DISS_defense_date").text = request.form['defensedate']
@@ -149,11 +153,11 @@ def processdeposit(deposittype):
     print('dates done')
 
     # set degree
-    #metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_abbreviation").text = request.form['degreename']
-    #metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_name").text = formdata[deposittype]["degreename"].get(request.form['degreename'])
+    # metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_abbreviation").text = request.form['degreename']
+    # metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_name").text = formdata[deposittype]["degreename"].get(request.form['degreename'])
     metadata_tree.find(".//DISS_description//DISS_degree//DISS_degree_name").text = request.form['degreename']
 
-    #set department
+    # set department
     metadata_tree.find(".//DISS_description//DISS_inst_department").text = request.form['department']
     # set advisors
     # metadata_tree.find(".//DISS_description//DISS_advisor//DISS_name//DISS_surname").text = "AdvisorL"
@@ -228,8 +232,8 @@ def processdeposit(deposittype):
         metadata_tree.find(".//DISS_repository//DISS_delayed_release").text = request.form['availability']
 
     # set categories
-    #metadata_tree.find(".//DISS_description//DISS_categorization//DISS_category//DISS_cat_code").text = parameters.topics.get(request.form['topic'])
-    #metadata_tree.find(".//DISS_description//DISS_categorization//DISS_category//DISS_cat_desc").text = request.form['topic']
+    # metadata_tree.find(".//DISS_description//DISS_categorization//DISS_category//DISS_cat_code").text = parameters.topics.get(request.form['topic'])
+    # metadata_tree.find(".//DISS_description//DISS_categorization//DISS_category//DISS_cat_desc").text = request.form['topic']
 
     # set keywords
     keywords = metadata_tree.findall(".//DISS_description//DISS_categorization//DISS_keyword")
@@ -247,11 +251,11 @@ def processdeposit(deposittype):
     metadata_tree.find(".//DISS_repository//DISS_agreement_decision_date").text = request.form['pubdate']
 
     ##
-     # End of metadata capture from form
-     #
-     # Begin request 
-     ##    
-    
+    # End of metadata capture from form
+    #
+    # Begin request
+    ##
+
     # set temporary file names using title and author
     file_name = secure_filename(request.form['authorlname'] + '_' + request.form['title'])
 
@@ -262,12 +266,12 @@ def processdeposit(deposittype):
 
     # write XML to temp file
     metadata_tree = metadata_tree.getroot()
-    with open(os.path.join(app.config['UPLOAD_FOLDER'],xml_file), 'w+') as fh:
-        fh.write(etree.tostring(metadata_tree, encoding='unicode')) # , pretty_print=True (for lxml)
+    with open(os.path.join(app.config['UPLOAD_FOLDER'], xml_file), 'w+') as fh:
+        fh.write(etree.tostring(metadata_tree, encoding='unicode'))  # , pretty_print=True (for lxml)
 
     # create the zip file and write uploaded files and metadata to it
     # contextlib.closing needed for python 2.6
-    with contextlib.closing(ZipFile(os.path.join(app.config['UPLOAD_FOLDER'],zip_file), "w")) as depositzip:
+    with contextlib.closing(ZipFile(os.path.join(app.config['UPLOAD_FOLDER'], zip_file), "w")) as depositzip:
         depositzip.write(xml_file)
         depositzip.write(request.files['primaryfile'].filename)
         for file in request.files.getlist("supplementalfiles"):
@@ -275,19 +279,19 @@ def processdeposit(deposittype):
                 depositzip.write(file.filename)
 
     # encode the zip file and create sword call file
-    encodedzip = base64.b64encode(open(os.path.join(app.config['UPLOAD_FOLDER'],zip_file), 'rb').read()).decode()
+    encodedzip = base64.b64encode(open(os.path.join(app.config['UPLOAD_FOLDER'], zip_file), 'rb').read()).decode()
 
     # copy the deposit.txt file to app.config['UPLOAD_FOLDER']
-    shutil.copyfile(os.path.join(app_path,'static/deposit.txt'), os.path.join(app.config['UPLOAD_FOLDER'],txt_file))
-    sword_call = open(os.path.join(app.config['UPLOAD_FOLDER'],txt_file), 'r').read().format(encoding=encodedzip)
-    open(os.path.join(app.config['UPLOAD_FOLDER'],txt_file), 'w').write(sword_call)
+    shutil.copyfile(os.path.join(app_path, 'static/deposit.txt'), os.path.join(app.config['UPLOAD_FOLDER'], txt_file))
+    sword_call = open(os.path.join(app.config['UPLOAD_FOLDER'], txt_file), 'r').read().format(encoding=encodedzip)
+    open(os.path.join(app.config['UPLOAD_FOLDER'], txt_file), 'w').write(sword_call)
 
     # set request url and authentication
     deposit_url = config.get('deposit_url').format(
-        username=config.get('deposit_username'), 
+        username=config.get('deposit_username'),
         password=config.get('deposit_password')
     )
-    print (deposit_url)
+    print(deposit_url)
 
     # set the headers
     headers = {
@@ -296,31 +300,28 @@ def processdeposit(deposittype):
     }
 
     # get saved text blob and make the call
-    data = open(os.path.join(app.config['UPLOAD_FOLDER'],txt_file), 'rb').read()
+    data = open(os.path.join(app.config['UPLOAD_FOLDER'], txt_file), 'rb').read()
     print("sending file")
     r = requests.post(deposit_url, headers=headers, data=data)
 
-    #logging.info("---------------------")
-    #logging.info('deposit made for ' + request.form['authorfname'] + request.form['authorlname'])
-    #logging.info('title: ' + request.form['title'])
-    #logging.info('date: ' + request.form['pubdate'])
-    #logging.info('status: ' + str(r.status_code) + "  " + r.text)
+    # logging.info("---------------------")
+    # logging.info('deposit made for ' + request.form['authorfname'] + request.form['authorlname'])
+    # logging.info('title: ' + request.form['title'])
+    # logging.info('date: ' + request.form['pubdate'])
+    # logging.info('status: ' + str(r.status_code) + "  " + r.text)
 
     # delete the files
-    os.remove(os.path.join(app.config['UPLOAD_FOLDER'],request.files['primaryfile'].filename))
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'], request.files['primaryfile'].filename))
     for file in request.files.getlist("supplementalfiles"):
-       if file.filename != '':
-           os.remove(os.path.join(app.config['UPLOAD_FOLDER'],file.filename))
-    os.remove(os.path.join(app.config['UPLOAD_FOLDER'],zip_file))
-    os.remove(os.path.join(app.config['UPLOAD_FOLDER'],xml_file))
-    os.remove(os.path.join(app.config['UPLOAD_FOLDER'],txt_file))
-
-
-
+        if file.filename != '':
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'], zip_file))
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'], xml_file))
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'], txt_file))
 
     print(r.status_code)
     return r.status_code
-    #return 201
+    # return 201
 
 
 @app.errorhandler(400)
@@ -330,18 +331,16 @@ def processdeposit(deposittype):
 @app.errorhandler(502)
 @app.errorhandler(504)
 def http_error_handler(error):
-    #msg = EmailMessage()
-    #msg.set_content('Dear UM SWORD admin,\n\nThere has been an error on the SWORD deposit server with the following message:\n\n%s\n\nkind regards\nfrom the server' % (error))
-    #msg['Subject'] = 'SWORD error'
-    #msg['From'] = 'tibben@ocf.berkeley.edu'
-    #msg['To'] = 'tibben@huaylas.com'
-    #s = smtplib.SMTP('localhost')
-    #s.send_message(msg)
-    #s.quit()
+    # msg = EmailMessage()
+    # msg.set_content('Dear UM SWORD admin,\n\nThere has been an error on the SWORD deposit server with the following message:\n\n%s\n\nkind regards\nfrom the server' % (error))
+    # msg['Subject'] = 'SWORD error'
+    # msg['From'] = 'tibben@ocf.berkeley.edu'
+    # msg['To'] = 'tibben@huaylas.com'
+    # s = smtplib.SMTP('localhost')
+    # s.send_message(msg)
+    # s.quit()
     print(error)
-    return render_template('error.html')
-
-
+    return render_template('error.html', formdata=formdata, error=error)
 
 
 @app.route("/um-agreement-pdf/", methods=['GET'])
@@ -351,6 +350,7 @@ def downloadagreement():
     except Exception:
         # return render_template('error.html')
         return http_error_handler('send agreement pdf failed')
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -370,7 +370,7 @@ def index():
                 return render_template("deposit_form.html", formdata=formdata)
             else:
                 return http_error_handler('no deposit type selected')
-                #return render_template('error.html')
+                # return render_template('error.html')
         if session['step'] == "depositform":
             depositresult = processdeposit(request.form['deposittype'])
             if depositresult == 201:
@@ -396,4 +396,3 @@ def index():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
-
