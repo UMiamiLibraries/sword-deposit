@@ -1,19 +1,25 @@
-<p>A new thesis/dissertation for Open Access Dissertations has been uploaded by
-    {{ email_data.authorfname }} {% if email_data.authormname %} {{ email_data.authormname }} {% endif %}{{ email_data.authorlname }} {{ email_data.authoremail }}.</p>
+<h1>New thesis/dissertation for Open Access Dissertations has been uploaded.</h1>
 
-<div>The authors are:</div>
-{{ email_data.authorfname }} {% if email_data.authormname %} {{ email_data.authormname }} {% endif %}{{ email_data.authorlname }} {{ email_data.authoremail }}
+<h3>Author:</h3>
+<p>
+{{ email_data.authorfname }}
+    {% if email_data.authormname %} {{ email_data.authormname }} {% endif %}
+    {{ email_data.authorlname }} {{ email_data.authoremail }}
+</p>
 
-<div>The title is:</div>
-{{ email_data.title }}
+<h3>Title:</h3>
+<p>{{ email_data.title }}</p>
 
-<div>The keywords are:</div>
-    {% if email_data.getlist('keywords') %}
-        <li><strong>Keywords:</strong>
-                <ul class="list-unstyled">
-                {% for keyword in email_data.getlist('keywords') %}
-                        <li>{{ keyword }}</li>
-                {% endfor %}
-                </ul>
-        </li>
-    {% endif %}
+<h3>Keywords:</h3>
+{% if email_data.getlist('keywords') %}
+    <ul>
+    {% for keyword in email_data.getlist('keywords') %}
+        {% if keyword %}
+            <li>{{ keyword }}</li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endif %}
+
+<h3>Department</h3>
+{{ email_data.department }}

@@ -1,11 +1,12 @@
-click==6.7
-Flask==1.0.2
-itsdangerous==0.24
-Jinja2==2.11.1
-MarkupSafe==1.0
-Werkzeug==0.15.3
-requests==2.20.1
-slack-webhook==1.0.3
+click==7.1.2
+Flask==1.1.2
+itsdangerous==1.1.0
+Jinja2==2.11.3
+MarkupSafe==1.1.1
+Werkzeug==1.0.1
+requests==2.25.1
+slack-webhook==1.0.5
+urllib3==1.26.5 # not directly required, pinned by Snyk to avoid a vulnerability
 WTForms==2.3.3
 Flask-CKEditor==0.4.4.1
 Flask-mail==0.9.1
