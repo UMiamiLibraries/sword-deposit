@@ -1,353 +1,356 @@
 {% extends "base.html" %}
 
 {% block header %}
-    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
-    <script src="../static/ckeditor/ckeditor.js"></script>
+<link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+<script src="../static/ckeditor/ckeditor.js"></script>
 {% endblock %}
 
 {% block content %}
 
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
         <li class="breadcrumb-item">1. Select Submission Type</li>
         <li class="breadcrumb-item">2. Accept Agreement</li>
         <li class="breadcrumb-item active">3. Submit Form</li>
-      </ol>
-    </nav>
+    </ol>
+</nav>
 
-    <h1>{{ formdata.deposittype.capitalize() }} Submission Form</h1>
+<h1>{{ formdata.deposittype.capitalize() }} Submission Form</h1>
 
-    <form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data" class="please-validate" novalidate>
+<form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data" class="please-validate" novalidate>
 
-        <!-- TITLE -->
-        <div class="card mb-3">
-            <div class="card-header">Title <small class="text-muted">required</small></div>
-            <div class="card-body">
-                <p class="card-text">
-                    Enter the full title as it appears on the first page of the abstract. Do not use ALL CAPS. Please use Title Case, i.e., capitalize the first letter of each major word
-                    and lower case minor words like “and,” “in,” “a,” etc. This is an example of a properly capitalized
-                    title: "An Analysis of Clause Usage in Academic Texts Produced by African-American, Haitian, and
-                    Hispanic Community College Students."
-                 </p>
-                <input id="title" name="title" class="form-control" required>
+    <!-- TITLE -->
+    <div class="card mb-3">
+        <div class="card-header">Title <small class="text-muted">required</small></div>
+        <div class="card-body">
+            <p class="card-text">
+                Enter the full title as it appears on the first page of the abstract. Do not use ALL CAPS. Please use Title Case, i.e., capitalize the first letter of each major word
+                and lower case minor words like “and,” “in,” “a,” etc. This is an example of a properly capitalized
+                title: "An Analysis of Clause Usage in Academic Texts Produced by African-American, Haitian, and
+                Hispanic Community College Students."
+            </p>
+            <input id="title" name="title" class="form-control" required>
+        </div>
+    </div>
+
+    <!-- AUTHOR -->
+    <div class="card mb-3">
+        <div class="card-header">Author <small class="text-muted">required</small></div>
+        <div class="card-body">
+            <p class="card-text">Make sure to list the name as seen on the document. Please use a permanent email address that the public will see.</p>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input id="email" name="authoremail" type="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="fname">First Name</label>
+                <input id="fname" name="authorfname" class="form-control"  required>
+            </div>
+            <div class="form-group">
+                <label for="mname">Middle Name or Initial</label>
+                <input id="mname" name="authormname" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="lname">Last Name</label>
+                <input id="lname" name="authorlname" class="form-control" required>
             </div>
         </div>
+    </div>
 
-        <!-- AUTHOR -->
-        <div class="card mb-3">
-            <div class="card-header">Author <small class="text-muted">required</small></div>
-            <div class="card-body">
-                <p class="card-text">Make sure to list the name as seen on the document. Please use a permanent email address that the public will see.</p>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input id="email" name="authoremail" type="email" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="fname">First Name</label>
-                    <input id="fname" name="authorfname" class="form-control"  required>
-                </div>
-                <div class="form-group">
-                    <label for="mname">Middle Name or Initial</label>
-                    <input id="mname" name="authormname" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="lname">Last Name</label>
-                    <input id="lname" name="authorlname" class="form-control" required>
-                </div>
-            </div>
+    <!-- PUBLICATION DATE -->
+    <div class="card mb-3">
+        <div class="card-header">Publication Date</div>
+        <div class="card-body">
+            <p class="card-text">The publication date is set to today's date and cannot be modified.</p>
+            <input id="pubdate" name="pubdate" type="text" class="form-control" value="{{ formdata.dates.today }}" readonly>
         </div>
 
-        <!-- PUBLICATION DATE -->
-        <div class="card mb-3">
-            <div class="card-header">Publication Date</div>
-            <div class="card-body">
-                <p class="card-text">The publication date is set to today's date and cannot be modified.</p>
-                <input id="pubdate" name="pubdate" type="text" class="form-control" value="{{ formdata.dates.today }}" readonly>
-            </div>
+    </div>
 
+    <!-- DATE OF DEFENSE-->
+    <div class="card mb-3">
+        <div class="card-header">Date of Defense <small class="text-muted">required</small></div>
+        <div class="card-body">
+            <input id="defensedate" name="defensedate" class="form-control" required>
         </div>
+    </div>
 
-        <!-- DATE OF DEFENSE-->
-         <div class="card mb-3">
-             <div class="card-header">Date of Defense <small class="text-muted">required</small></div>
-            <div class="card-body">
-                <input id="defensedate" name="defensedate" class="form-control" required>
-            </div>
-        </div>
-
-        <!-- AVAILABILITY-->
-        <div class="card mb-3">
-            <div class="card-header">Availability <small class="text-muted">required</small></div>
-            <div class="card-body">
-                <p class="card-text">Select Open Access or one of the Embargo options.</p>
-                <ul>
-                    <li>If "Open Access" is selected, the ETD will be made available for access world-wide.</li>
-                    <li>If an "Embargo" is selected, the ETD will be withdrawn from access for the specified time period.
-                        At the release date, the ETD will be made automatically available for Open Access.</li>
-                </ul>
-                 <div class="form-group">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="availability" id="openaccess" value="open access" required>
-                        <label class="form-check-label" for="openaccess">Open Access</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="availability" id="embargoone" value="{{ formdata.dates.oneyear }}">
-                        <label class="form-check-label" for="embargoone">Embargo - 1 year ({{ formdata.dates.oneyear }})</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="availability" id="embargotwo" value="{{ formdata.dates.eighteenmonths }}">
-                        <label class="form-check-label" for="embargotwo">Embargo - 18 months ({{ formdata.dates.eighteenmonths }})</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="availability" id="embargothree" value="{{ formdata.dates.twoyears }}">
-                        <label class="form-check-label" for="embargothree">Embargo - 2 years ({{ formdata.dates.twoyears }})</label>
-                    </div>
+    <!-- AVAILABILITY-->
+    <div class="card mb-3">
+        <div class="card-header">Availability <small class="text-muted">required</small></div>
+        <div class="card-body">
+            <p class="card-text">Select Open Access or one of the Embargo options.</p>
+            <ul>
+                <li>If "Open Access" is selected, the ETD will be made available for access world-wide.</li>
+                <li>If an "Embargo" is selected, the ETD will be withdrawn from access for the specified time period.
+                    At the release date, the ETD will be made automatically available for Open Access.</li>
+            </ul>
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="availability" id="openaccess" value="open access" required>
+                    <label class="form-check-label" for="openaccess">Open Access</label>
                 </div>
-            </div>
-        </div>
-
-        <!-- DEGREE TYPE-->
-        {% if formdata.deposittype == "dissertation" %}
-            <div class="card mb-3">
-                <div class="card-header">Degree Type <small class="text-muted">required</small></div>
-                <div class="card-body">
-                    <div class="form-group">
-                        {% for type in formdata.dissertation.degreetype %}
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="degreetype" id="{{ type }}" value="{{ type }}" required>
-                                <label class="form-check-label" for="{{ type }}">{{ formdata.dissertation.degreetype.get(type) }}</label>
-                            </div>
-                        {% endfor %}
-                    </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="availability" id="embargoone" value="{{ formdata.dates.oneyear }}">
+                    <label class="form-check-label" for="embargoone">Embargo - 1 year ({{ formdata.dates.oneyear }})</label>
                 </div>
-            </div>
-        {% endif %}
-
-        <!-- DEGREE NAME-->
-        <div class="card mb-3">
-            <div class="card-header">Degree Name <small class="text-muted">required</small></div>
-            <div class="card-body">
-                <div class="form-group">
-                    <select class="form-control" name="degreename" required>
-                        <option disabled selected value>Select a Degree Name</option>
-                        {% if formdata.deposittype == "dissertation" %}
-                            {% for degree in formdata.dissertation.degreename %}
-                                <option name="degree" value="{{ degree }}">{{ degree }}</option>
-                            {% endfor %}
-                        {% elif formdata.deposittype == "masters" %}
-                            {% for degree in formdata.masters.degreename %}
-                                 <option name="degree" value="{{ degree }}">{{ degree }}</option>
-                            {% endfor %}
-                        {% endif %}
-                    </select>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="availability" id="embargotwo" value="{{ formdata.dates.eighteenmonths }}">
+                    <label class="form-check-label" for="embargotwo">Embargo - 18 months ({{ formdata.dates.eighteenmonths }})</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="availability" id="embargothree" value="{{ formdata.dates.twoyears }}">
+                    <label class="form-check-label" for="embargothree">Embargo - 2 years ({{ formdata.dates.twoyears }})</label>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- DEPARTMENT -->
-        <div class="card mb-3">
-            <div class="card-header">Degree Program <small class="text-muted">required</small></div>
-            <div class="card-body">
-                <p class="card-text">
-                    Please select your degree program. If you do not see your degree program in the drop down list,
-                    please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository
-                    please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository
-                    Manager ({{ formdata.get('repository_manager_email') }}).
-                </p>
-                <div class="form-group">
-                    <select class="form-control" name="department" required>
-                        <option disabled selected value>Select a department</option>
-                        {% if formdata.deposittype == "dissertation" %}
-                            {% for key, value in formdata.dissertation.degrees.items() %}
-                                <option name="department" value="{{ key }}">{{ value }}</option>
-                            {% endfor %}
-                        {% elif formdata.deposittype == "masters" %}
-                            {% for key, value in formdata.masters.degrees.items() %}
-                                <option name="department" value="{{ key }}">{{ value }}</option>
-                            {% endfor %}
-                        {% endif %}
-                    </select>
+    <!-- DEGREE TYPE-->
+    {% if formdata.deposittype == "dissertation" %}
+    <div class="card mb-3">
+        <div class="card-header">Degree Type <small class="text-muted">required</small></div>
+        <div class="card-body">
+            <div class="form-group">
+                {% for type in formdata.dissertation.degreetype %}
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="degreetype" id="{{ type }}" value="{{ type }}" required>
+                    <label class="form-check-label" for="{{ type }}">{{ formdata.dissertation.degreetype.get(type) }}</label>
                 </div>
+                {% endfor %}
             </div>
         </div>
+    </div>
+    {% endif %}
 
-        <!-- COMMITTEE MEMBERS -->
-         <div class="card mb-3">
-            <div class="card-header">Committee Members <small class="text-muted">3 required</small></div>
-            <div class="card-body">
-                <p class="card-text">
-                    Add the names of the committee members (up to 7). The Chairperson’s name (Mentor's
-                    name for Medical School students only) should be added first. (Medical School students
-                    should add the Chairperson's name in the second Committee Members' space.) Format each
-                    name: First name, middle name or initial, last name (e.g., John W. Smith). Omit titles and
-                    degrees. Do not add the Dean of the Graduate School.
-                </p>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">1st committee member</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="First name" name="firstcmtemember" required>
-                    <input type="text" class="form-control" placeholder="Middle name" name="firstcmtemember">
-                    <input type="text" class="form-control" placeholder="Last name" name="firstcmtemember" required>
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">2nd committee member</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="First name" name="secondcmtemember" required>
-                    <input type="text" class="form-control" placeholder="Middle name"name="secondcmtemember">
-                    <input type="text" class="form-control" placeholder="Last name"name="secondcmtemember" required>
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">3rd committee member</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="First name" name="thirdcmtemember" required>
-                    <input type="text" class="form-control" placeholder="Middle name"name="thirdcmtemember">
-                    <input type="text" class="form-control" placeholder="Last name"name="thirdcmtemember" required>
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">4th committee member</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="First name" name="fourthcmtemember">
-                    <input type="text" class="form-control" placeholder="Middle name"name="fourthcmtemember">
-                    <input type="text" class="form-control" placeholder="Last name"name="fourthcmtemember">
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">5th committee member</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="First name" name="fifthcmtemember">
-                    <input type="text" class="form-control" placeholder="Middle name" name="fifthcmtemember">
-                    <input type="text" class="form-control" placeholder="Last name" name="fifthcmtemember">
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">6th committee member</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="First name" name="sixthcmtemember">
-                    <input type="text" class="form-control" placeholder="Middle name" name="sixthcmtemember">
-                    <input type="text" class="form-control" placeholder="Last name" name="sixthcmtemember">
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">7th committee member</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="First name" name="seventhcmtemember">
-                    <input type="text" class="form-control" placeholder="Middle name" name="seventhcmtemember">
-                    <input type="text" class="form-control" placeholder="Last name" name="seventhcmtemember">
-                </div>
-                <!-- <div class="row">
-                        <button type="button" class="btn btn-link">
-                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                            Add more committee members
-                        </button>
-                </div> -->
-            </div>
-        </div>
-
-        <!-- ABSTRACT -->
-        <div class="card mb-3">
-            <div class="card-header">Abstract</div>
-            <div class="card-body">
-                <p class="card-text">
-                    1800 character limit. <strong>Please note that you will not be able to paste any text that is longer
-                    than the character limit.</strong> Do not include the Abstract heading that appears in the manuscript.
-                    Do not paste directly from a Microsoft Word document. 'Save as' a text file, then copy/paste from the saved file.
-                    <strong>Review text for necessary styling changes.</strong>
-                 </p>
-                {{ ckeditor.create(name='abstract') }}
-            </div>
-        </div>
-
-        <!-- KEYWORDS -->
-         <div class="card mb-3">
-            <div class="card-header">Keywords</div>
-            <div class="card-body">
-                <p class="card-text">
-                    Six (6) keyword limit. Provide subject keywords or keyword phrases that will help others find your
-                    work.  Think about what words people might use to search, and what the important concepts in your
-                    work are. Use sentence case for keywords (i.e. capitalize the first word of each keyword phrase,
-                    but not subsequent words). Spell out all acronyms. You are encouraged to use a controlled list
-                    such as the
-                    <a href="http://id.loc.gov/authorities/subjects.html" target="_blank">Library of Congress Subject Headings</a>.
-                 </p>
-                <div class="form-row">
-                    <div class="col-md-6 mb-3">
-                        <input type="text" class="form-control" id="keywordone" name="keywords">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <input type="text" class="form-control" id="keywordtwo" name="keywords">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-6 mb-3">
-                        <input type="text" class="form-control" id="keywordthree" name="keywords">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <input type="text" class="form-control" id="keywordfour" name="keywords">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-6 mb-3">
-                        <input type="text" class="form-control" id="keywordfive" name="keywords">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <input type="text" class="form-control" id="keywordsix" name="keywords">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- LANGUAGE -->
-        <div class="card mb-3">
-            <div class="card-header">Language</div>
-            <div class="card-body">
-                <p class="card-text">
-                    If your ETD is in English, do not modify this selection. If you are approved to submit in a
-                    language other than English, please select it from the drop down. If the language does not appear
-                    in the dropdown, please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('repository_manager_email') }}) to get pre-approval.
-                 </p>
-                <select class="form-control" id="language" name="language" required>
-                    <option value="EN" default>English</option>
-                    {% for language in formdata.languages %}
-                        <option value="{{ language }}">{{ formdata.languages.get(language) }}</option>
+    <!-- DEGREE NAME-->
+    <div class="card mb-3">
+        <div class="card-header">Degree Name <small class="text-muted">required</small></div>
+        <div class="card-body">
+            <div class="form-group">
+                <select class="form-control" name="degreename" required>
+                    <option disabled selected value>Select a Degree Name</option>
+                    {% if formdata.deposittype == "dissertation" %}
+                    {% for degree in formdata.dissertation.degreename %}
+                    <option name="degree" value="{{ degree }}">{{ degree }}</option>
                     {% endfor %}
+                    {% elif formdata.deposittype == "masters" %}
+                    {% for degree in formdata.masters.degreename %}
+                    <option name="degree" value="{{ degree }}">{{ degree }}</option>
+                    {% endfor %}
+                    {% endif %}
                 </select>
             </div>
         </div>
+    </div>
 
-        <!-- PRIMARY FILEs -->
-        <div class="card mb-3">
-            <div class="card-header">Upload Primary Full Text <small class="text-muted">required</small></div>
-            <div class="card-body">
-                <p class="card-text">
-                    Please attach your primary full text file. The only allowed primary format is pdf.<br><br>NOTE: Maximum total upload limit is 16MB for the primary file. If your primary file is over 16MB please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('repository_manager_email') }}) and then submit this form with the title page of your document as the primary file.
-                </p>
-                <div class="form-group">
-                    <!--<label class="custom-file-label" for="file">Upload Full Text</label>-->
-                    <label for="primaryfile">Primary File:</label>
-                    <input type="file" name="primaryfile" class="form-control-file" id="primaryfile"
-                           accept=".pdf,application/pdf"
-                           required>
-                    <div class="invalid-feedback">You must include a primary file</div> 
-                    <div class="invalid-feedback">Your primary file is over 16MB</div> 
+    <!-- DEPARTMENT -->
+    <div class="card mb-3">
+        <div class="card-header">Degree Program <small class="text-muted">required</small></div>
+        <div class="card-body">
+            <p class="card-text">
+                Please select your degree program. If you do not see your degree program in the drop down list,
+                please contact the Graduate School ({{ formdata.get('grad_service_account') }}) and copy the Repository
+                Manager ({{ formdata.get('repository_manager_email') }}).
+            </p>
+            <div class="form-group">
+                <select class="form-control" name="department" required>
+                    <option disabled selected value>Select a department</option>
+                    {% if formdata.deposittype == "dissertation" %}
+                    {% for key, value in formdata.dissertation.degrees.items() %}
+                    <option name="department" value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                    {% elif formdata.deposittype == "masters" %}
+                    {% for key, value in formdata.masters.degrees.items() %}
+                    <option name="department" value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMMITTEE MEMBERS -->
+    <div class="card mb-3">
+        <div class="card-header">Committee Members <small class="text-muted">3 required</small></div>
+        <div class="card-body">
+            <p class="card-text">
+                Add the names of the committee members (up to 7). The Chairperson’s name (Mentor's
+                name for Medical School students only) should be added first. (Medical School students
+                should add the Chairperson's name in the second Committee Members' space.) Format each
+                name: First name, middle name or initial, last name (e.g., John W. Smith). Omit titles and
+                degrees. Do not add the Dean of the Graduate School.
+            </p>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">1st committee member</span>
+                </div>
+                <input type="text" class="form-control" placeholder="First name" name="firstcmtemember" required>
+                <input type="text" class="form-control" placeholder="Middle name" name="firstcmtemember">
+                <input type="text" class="form-control" placeholder="Last name" name="firstcmtemember" required>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">2nd committee member</span>
+                </div>
+                <input type="text" class="form-control" placeholder="First name" name="secondcmtemember" required>
+                <input type="text" class="form-control" placeholder="Middle name"name="secondcmtemember">
+                <input type="text" class="form-control" placeholder="Last name"name="secondcmtemember" required>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">3rd committee member</span>
+                </div>
+                <input type="text" class="form-control" placeholder="First name" name="thirdcmtemember" required>
+                <input type="text" class="form-control" placeholder="Middle name"name="thirdcmtemember">
+                <input type="text" class="form-control" placeholder="Last name"name="thirdcmtemember" required>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">4th committee member</span>
+                </div>
+                <input type="text" class="form-control" placeholder="First name" name="fourthcmtemember">
+                <input type="text" class="form-control" placeholder="Middle name"name="fourthcmtemember">
+                <input type="text" class="form-control" placeholder="Last name"name="fourthcmtemember">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">5th committee member</span>
+                </div>
+                <input type="text" class="form-control" placeholder="First name" name="fifthcmtemember">
+                <input type="text" class="form-control" placeholder="Middle name" name="fifthcmtemember">
+                <input type="text" class="form-control" placeholder="Last name" name="fifthcmtemember">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">6th committee member</span>
+                </div>
+                <input type="text" class="form-control" placeholder="First name" name="sixthcmtemember">
+                <input type="text" class="form-control" placeholder="Middle name" name="sixthcmtemember">
+                <input type="text" class="form-control" placeholder="Last name" name="sixthcmtemember">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">7th committee member</span>
+                </div>
+                <input type="text" class="form-control" placeholder="First name" name="seventhcmtemember">
+                <input type="text" class="form-control" placeholder="Middle name" name="seventhcmtemember">
+                <input type="text" class="form-control" placeholder="Last name" name="seventhcmtemember">
+            </div>
+            <!-- <div class="row">
+                    <button type="button" class="btn btn-link">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                        Add more committee members
+                    </button>
+            </div> -->
+        </div>
+    </div>
+
+    <!-- ABSTRACT -->
+    <div class="card mb-3">
+        <div class="card-header">Abstract</div>
+        <div class="card-body">
+            <ul class="card-text">
+                <li>1800 character limit. <strong>Please note that you will not be able to paste any text that is longer
+                    than the character limit.</strong></li>
+                <li>Do not include the Abstract heading that appears in the manuscript.</li>
+                <li>Do not paste directly from a Microsoft Word document. 'Save as' a text file, then copy/paste
+                    from the saved file.
+                    <strong>Review text for necessary styling changes.</strong> </li>
+                <li>Abstract submitted here does not need to be identical to the Abstract in your official
+                    manuscript.</li>
+            </ul>
+            {{ ckeditor.create(name='abstract') }}
+        </div>
+    </div>
+
+    <!-- KEYWORDS -->
+    <div class="card mb-3">
+        <div class="card-header">Keywords</div>
+        <div class="card-body">
+            <p class="card-text">
+                Six (6) keyword limit. Provide subject keywords or keyword phrases that will help others find your
+                work.  Think about what words people might use to search, and what the important concepts in your
+                work are. Use sentence case for keywords (i.e. capitalize the first word of each keyword phrase,
+                but not subsequent words). Spell out all acronyms. You are encouraged to use a controlled list
+                such as the
+                <a href="http://id.loc.gov/authorities/subjects.html" target="_blank">Library of Congress Subject Headings</a>.
+            </p>
+            <div class="form-row">
+                <div class="col-md-6 mb-3">
+                    <input type="text" class="form-control" id="keywordone" name="keywords">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <input type="text" class="form-control" id="keywordtwo" name="keywords">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-6 mb-3">
+                    <input type="text" class="form-control" id="keywordthree" name="keywords">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <input type="text" class="form-control" id="keywordfour" name="keywords">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-6 mb-3">
+                    <input type="text" class="form-control" id="keywordfive" name="keywords">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <input type="text" class="form-control" id="keywordsix" name="keywords">
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- SUPPLEMENTAL FILEs -->
-        <div class="card mb-3">
-            <div class="card-header">Upload Supplemental Files <small class="text-muted"></small></div>
-            <div class="card-body">
-                <p class="card-text">
-                    Allowed supplemental formats are txt, csv, pdf, docx, jpg, tif, png, xlsx, mp3, wav, avi, mov, and wmv.<br><br>NOTE: Maximum total upload limit is 12MB for the combined supplemental material. If your supplemental material is over 12MB please contact the Graduate School ({{ formdata.get('grad_email') }}) and copy the Repository Manager ({{ formdata.get('repository_manager_email') }}) and then submit this form with the primary file still attached.
-                </p>
-                <div class="form-group">
-                    <label for="supplementalfiles">Supplemental Files:</label>
-                    <input type="file" name="supplementalfiles" class="form-control-file" id="supplementalfiles"
-                           accept=".txt,csv,json
+    <!-- LANGUAGE -->
+    <div class="card mb-3">
+        <div class="card-header">Language</div>
+        <div class="card-body">
+            <p class="card-text">
+                If your ETD is in English, do not modify this selection. If you are approved to submit in a
+                language other than English, please select it from the drop down. If the language does not appear
+                in the dropdown, please contact the Graduate School ({{ formdata.get('grad_service_account') }}) and copy the Repository Manager ({{ formdata.get('repository_manager_email') }}) to get pre-approval.
+            </p>
+            <select class="form-control" id="language" name="language" required>
+                <option value="EN" default>English</option>
+                {% for language in formdata.languages %}
+                <option value="{{ language }}">{{ formdata.languages.get(language) }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- PRIMARY FILEs -->
+    <div class="card mb-3">
+        <div class="card-header">Upload Primary Full Text <small class="text-muted">required</small></div>
+        <div class="card-body">
+            <p class="card-text">
+                Please attach your primary full text file. The only allowed primary format is pdf.<br><br>NOTE: Maximum total upload limit is 16MB for the primary file. If your primary file is over 16MB please contact the Graduate School ({{ formdata.get('grad_service_account') }}) and copy the Repository Manager ({{ formdata.get('repository_manager_email') }}) and then submit this form with the title page of your document as the primary file.
+            </p>
+            <div class="form-group">
+                <!--<label class="custom-file-label" for="file">Upload Full Text</label>-->
+                <label for="primaryfile">Primary File:</label>
+                <input type="file" name="primaryfile" class="form-control-file" id="primaryfile"
+                       accept=".pdf,application/pdf"
+                       required>
+                <div class="invalid-feedback">You must include a primary file</div>
+                <div class="invalid-feedback">Your primary file is over 16MB</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUPPLEMENTAL FILEs -->
+    <div class="card mb-3">
+        <div class="card-header">Upload Supplemental Files <small class="text-muted"></small></div>
+        <div class="card-body">
+            <p class="card-text">
+                Allowed supplemental formats are txt, csv, pdf, docx, jpg, tif, png, xlsx, mp3, wav, avi, mov, and wmv.<br><br>NOTE: Maximum total upload limit is 12MB for the combined supplemental material. If your supplemental material is over 12MB please contact the Graduate School ({{ formdata.get('grad_service_account') }}) and copy the Repository Manager ({{ formdata.get('repository_manager_email') }}) and then submit this form with the primary file still attached.
+            </p>
+            <div class="form-group">
+                <label for="supplementalfiles">Supplemental Files:</label>
+                <input type="file" name="supplementalfiles" class="form-control-file" id="supplementalfiles"
+                       accept=".txt,csv,json
                                    .jpeg,image/jpg,
                                    .tif,.tiff,image/tif,
                                    .png,image/png,
@@ -357,108 +360,108 @@
                                    .zip,
                                    .mp3,.wav,
                                    .avi,.mov,.wmv"
-                           multiple>
-                    <div class="supplemental-file-list" style ="margin-top: .5rem;"></div> 
-                    <div class="invalid-feedback">Your supplemental files include a duplicate of the primary file</div> 
-                    <div class="invalid-feedback">The total size of your supplemental material is over 12 MB</div> 
-                </div>
+                       multiple>
+                <div class="supplemental-file-list" style ="margin-top: .5rem;"></div>
+                <div class="invalid-feedback">Your supplemental files include a duplicate of the primary file</div>
+                <div class="invalid-feedback">The total size of your supplemental material is over 12 MB</div>
             </div>
         </div>
+    </div>
 
-        <!-- SUBMIT BUTTON -->
-        <button type="submit" class="btn btn-default" name="deposittype" value="{{ formdata.deposittype }}">Submit</button>
+    <!-- SUBMIT BUTTON -->
+    <button type="submit" class="btn btn-default" name="deposittype" value="{{ formdata.deposittype }}">Submit</button>
 
-    </form>
-    <br>
-    <script>
+</form>
+<br>
+<script>
     // Custom form validation - mostly for file name checking
     (function() {
-      'use strict';
-      // check to make sure nothing in supplemental duplicates the primary file
-      var checkSupplemental = function() {
-        let supplemental = Object.keys($("#supplementalfiles")[0].files).reduce((c,k) => {
-          c.push($("#supplementalfiles")[0].files[k].name);
-          return c; 
-        },[]);
-        let suppsize = Object.keys($("#supplementalfiles")[0].files).reduce((c,k) => {
-          c = c + $("#supplementalfiles")[0].files[k].size;
-          return c; 
-        },0);
-        if (suppsize > 12000000) {
-          $("#supplementalfiles").next().next().next().addClass('d-block');
-          return false;
-        }
-        if ($("#primaryfile")[0].files[0].size > 16000000) {
-          $("#primaryfile").next().next().addClass('d-block');
-          return false;
-        }
-        if (supplemental.length > 0 && $("#primaryfile")[0].files.length > 0) {
-          if (supplemental.indexOf($("#primaryfile")[0].files[0].name) != -1) {
-            $("#supplementalfiles").next().next().addClass('d-block');
-            return false;
-          }
-        }
-        return true;
-      }
-      // 
-      window.addEventListener('load', function() {
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.getElementsByClassName('please-validate');
-        // Loop over them and prevent submission
-        var validation = Array.prototype.filter.call(forms, function(form) {
-          form.addEventListener('submit', function(event) {
-            if (form.checkValidity() === false || checkSupplemental() === false) {
-              event.preventDefault();
-              event.stopPropagation();
-              var errorElements = document.querySelectorAll("input.form-control:invalid");
-              if (errorElements.length > 0) {
-                $('html, body').animate({
-                  scrollTop: ($(errorElements[0]).offset().top - 20)
-                }, 2000);
-              }
-            } else {
-                /* form submitted successfully, do something to block further user input */
-                $("#inprogress").toggle();
-                //$("#inprogress").attr('style','display:block;');
-                var x = 0;
+        'use strict';
+        // check to make sure nothing in supplemental duplicates the primary file
+        var checkSupplemental = function() {
+            let supplemental = Object.keys($("#supplementalfiles")[0].files).reduce((c,k) => {
+                c.push($("#supplementalfiles")[0].files[k].name);
+                return c;
+            },[]);
+            let suppsize = Object.keys($("#supplementalfiles")[0].files).reduce((c,k) => {
+                c = c + $("#supplementalfiles")[0].files[k].size;
+                return c;
+            },0);
+            if (suppsize > 12000000) {
+                $("#supplementalfiles").next().next().next().addClass('d-block');
+                return false;
             }
-            form.classList.add('was-validated');
-          }, false);
-        });
-        // add custom validation and messages for the supplemental file picker
-        $("#supplementalfiles")[0].addEventListener('change', (function(e){
-          var files = [];
-          for (var i = 0; i < $(this)[0].files.length; i++) {
-              files.push($(this)[0].files[i].name);
-          }
-          if (files.length > 1) $(this).next().html(files.join('<br/>'));
-          else $(this).next().html('');
-          $(this).next().next().removeClass('d-block');
-          $(this).next().next().next().removeClass('d-block');
-          checkSupplemental();
-        }));
-        // on primary selection run the supplemental checker
-        $("#primaryfile")[0].addEventListener('change', (function(e){
-          $("#supplementalfiles").next().next().removeClass('d-block');
-          $("#supplementalfiles").next().next().next().removeClass('d-block');
-          $("#primaryfile").next().next().removeClass('d-block');
-          checkSupplemental();
-        }));
-      }, false);
+            if ($("#primaryfile")[0].files[0].size > 16000000) {
+                $("#primaryfile").next().next().addClass('d-block');
+                return false;
+            }
+            if (supplemental.length > 0 && $("#primaryfile")[0].files.length > 0) {
+                if (supplemental.indexOf($("#primaryfile")[0].files[0].name) != -1) {
+                    $("#supplementalfiles").next().next().addClass('d-block');
+                    return false;
+                }
+            }
+            return true;
+        }
+        //
+        window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('please-validate');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false || checkSupplemental() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        var errorElements = document.querySelectorAll("input.form-control:invalid");
+                        if (errorElements.length > 0) {
+                            $('html, body').animate({
+                                scrollTop: ($(errorElements[0]).offset().top - 20)
+                            }, 2000);
+                        }
+                    } else {
+                        /* form submitted successfully, do something to block further user input */
+                        $("#inprogress").toggle();
+                        //$("#inprogress").attr('style','display:block;');
+                        var x = 0;
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+            // add custom validation and messages for the supplemental file picker
+            $("#supplementalfiles")[0].addEventListener('change', (function(e){
+                var files = [];
+                for (var i = 0; i < $(this)[0].files.length; i++) {
+                    files.push($(this)[0].files[i].name);
+                }
+                if (files.length > 1) $(this).next().html(files.join('<br/>'));
+                else $(this).next().html('');
+                $(this).next().next().removeClass('d-block');
+                $(this).next().next().next().removeClass('d-block');
+                checkSupplemental();
+            }));
+            // on primary selection run the supplemental checker
+            $("#primaryfile")[0].addEventListener('change', (function(e){
+                $("#supplementalfiles").next().next().removeClass('d-block');
+                $("#supplementalfiles").next().next().next().removeClass('d-block');
+                $("#primaryfile").next().next().removeClass('d-block');
+                checkSupplemental();
+            }));
+        }, false);
     })();
-    </script>
+</script>
 {% endblock %}
 
 {% block footer %}
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-  <script>
-      // make sure defense date date picker works for all browsers
-      $( document ).ready(function() {
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script>
+    // make sure defense date date picker works for all browsers
+    $( document ).ready(function() {
         $('#defensedate').datepicker({ maxDate: 0, dateFormat: "yy-mm-dd" });
 
 
-      });
-      // add the inprogress div
-      $("body").append('<div style="background-color: rgba(255,255,255,0.7); position: absolute; top: 0px; left: 0px; height: '+$(document).height()+'px; Width: 100%; z-index: 100; display: none;" name="inprogress" id="inprogress"><center><img src="../static/loader.gif" style="position: fixed; bottom: 50%; margin-left: -40px;"></center></div>');
-  </script>
+    });
+    // add the inprogress div
+    $("body").append('<div style="background-color: rgba(255,255,255,0.7); position: absolute; top: 0px; left: 0px; height: '+$(document).height()+'px; Width: 100%; z-index: 100; display: none;" name="inprogress" id="inprogress"><center><img src="../static/loader.gif" style="position: fixed; bottom: 50%; margin-left: -40px;"></center></div>');
+</script>
 {% endblock %}
