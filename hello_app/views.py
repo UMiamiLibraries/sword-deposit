@@ -19,6 +19,9 @@ from .parameters import formdata
 
 app.secret_key = config.get('secret_key')
 
+# TODO: refactor to use azure web app configuation settings - issue with how to deal with local dev vars
+# app.secret_key = os.environ.get('MY_SECRET_KEY')
+# my_deposit_username = os.environ.get('MY_DEPOSIT_USERNAME')
 
 # generate dates for embargo in the form
 def getdates():
@@ -356,6 +359,7 @@ def downloadagreement():
 def index():
     if request.method == "GET":
         session['step'] = "selecttype"
+
         return render_template("select_type.html")
     elif request.method == "POST":
         if session['step'] == "selecttype":
